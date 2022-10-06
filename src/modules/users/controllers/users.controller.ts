@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get, NotFoundException } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
 
 @Controller('users')

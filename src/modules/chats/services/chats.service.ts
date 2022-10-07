@@ -1,6 +1,9 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
+import { ResponseChatDto } from '../dtos/response-chat.dto';
+import { ResponseMessageDto } from '../dtos/response-message.dto';
+import { ResponseShortChatDto } from '../dtos/response-short-chat.dto';
 import { ChatDocument, Chats } from '../schemas/chat.schema';
 import { Message } from '../schemas/message.schema';
 
@@ -10,7 +13,14 @@ export class ChatsService {
     @InjectModel(Chats.name) private chatsModel: Model<ChatDocument>,
   ) {}
 
-  async create(currentUser: string, receiver: string) {
+  async create(
+    currentUser: string,
+    receiver: string,
+  ): Promise<ResponseChatDto> {
+    if (currentUser == receiver)
+      throw new ForbiddenException(
+        'Current User cannot be the Receiver at the same time',
+      );
     if ((await this.count(currentUser, receiver)) > 0)
       throw new ForbiddenException("Chat mustn't exists");
     else {
@@ -19,12 +29,17 @@ export class ChatsService {
         user2: receiver,
         messages: [],
       });
-      return await createdChat.save();
+      const chat = await createdChat.save();
+      return {
+        _id: chat._id,
+        user: chat.user1 == currentUser ? chat.user2 : chat.user1,
+        messages: chat.messages,
+      };
     }
   }
 
-  async chats(currentUser: string) {
-    return await this.chatsModel
+  async chats(currentUser: string): Promise<ResponseShortChatDto[]> {
+    const chats = await this.chatsModel
       .aggregate([
         {
           $match: {
@@ -64,6 +79,13 @@ export class ChatsService {
         },
       ])
       .exec();
+    return chats.map((chat) => {
+      return {
+        _id: chat._id,
+        user: chat.user1 == currentUser ? chat.user2 : chat.user1,
+        lastMessage: chat.lastMessage,
+      };
+    });
   }
 
   private async count(currentUser: string, receiver: string): Promise<number> {
@@ -83,28 +105,58 @@ export class ChatsService {
       .exec();
   }
 
-  async chat(currentUser: string, receiver: string) {
+  async chat(
+    currentUser: string,
+    receiver: string,
+    page: number,
+  ): Promise<ResponseChatDto> {
+    if (page < 0) throw new ForbiddenException('Page must be greater than 0');
+    const first = page * 20;
+    const second = page + 1 * 20 - 1;
     if ((await this.count(currentUser, receiver)) == 0)
       throw new ForbiddenException('Chat must exists');
     else {
-      return await this.chatsModel
-        .findOne({
-          $or: [
-            {
-              user1: currentUser,
-              user2: receiver,
+      const chat = (
+        await this.chatsModel.aggregate([
+          {
+            $match: {
+              $or: [
+                {
+                  user1: new mongoose.Types.ObjectId(currentUser),
+                  user2: new mongoose.Types.ObjectId(receiver),
+                },
+                {
+                  user1: new mongoose.Types.ObjectId(receiver),
+                  user2: new mongoose.Types.ObjectId(currentUser),
+                },
+              ],
             },
-            {
-              user2: currentUser,
-              user1: receiver,
+          },
+          {
+            $project: {
+              _id: '$_id',
+              user1: '$user1',
+              user2: '$user2',
+              messages: {
+                $slice: [{ $reverseArray: '$messages' }, first, second],
+              },
             },
-          ],
-        })
-        .slice('messages', 2); //Modificar este para que aparezcan más mensajes
+          },
+        ])
+      )[0];
+      return {
+        _id: chat._id,
+        user: chat.user1 == currentUser ? chat.user2 : chat.user1,
+        messages: chat.messages,
+      };
     }
   }
 
-  async send(currentUser: string, receiver: string, message: string) {
+  async send(
+    currentUser: string,
+    receiver: string,
+    message: string,
+  ): Promise<ResponseMessageDto> {
     if ((await this.count(currentUser, receiver)) == 0)
       throw new ForbiddenException('Chat must exists');
     else {
@@ -113,7 +165,7 @@ export class ChatsService {
         sender: currentUser,
         message,
       };
-      const res = await this.chatsModel.updateOne(
+      await this.chatsModel.updateOne(
         {
           $or: [
             {

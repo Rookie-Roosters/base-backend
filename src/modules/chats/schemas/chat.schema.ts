@@ -11,11 +11,11 @@ export class Chats {
   @ApiProperty({ type: String, description: "Chat's primary key" })
   _id?: string;
 
-  @ApiProperty({ type: String, description: 'User' })
+  @ApiProperty({ type: String, description: 'User 1' })
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
   user1: User;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: String, description: 'User 2' })
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
   user2: User;
 

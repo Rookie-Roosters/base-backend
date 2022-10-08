@@ -4,6 +4,7 @@ import mongoose, { Model } from 'mongoose';
 import { ResponseChatDto } from '../dtos/response-chat.dto';
 import { ResponseMessageDto } from '../dtos/response-message.dto';
 import { ResponseShortChatDto } from '../dtos/response-short-chat.dto';
+import { ChatGateway } from '../gateways/chat.gateway';
 import { ChatDocument, Chats } from '../schemas/chat.schema';
 import { Message } from '../schemas/message.schema';
 
@@ -11,6 +12,7 @@ import { Message } from '../schemas/message.schema';
 export class ChatsService {
   constructor(
     @InjectModel(Chats.name) private chatsModel: Model<ChatDocument>,
+    private chatGateway: ChatGateway,
   ) {}
 
   async create(
@@ -32,7 +34,7 @@ export class ChatsService {
       const chat = await createdChat.save();
       return {
         _id: chat._id,
-        user: chat.user1 == currentUser ? chat.user2 : chat.user1,
+        user: chat.user1._id == currentUser ? chat.user2 : chat.user1,
         messages: chat.messages,
       };
     }
@@ -184,6 +186,7 @@ export class ChatsService {
           },
         },
       );
+      await this.chatGateway.sendMessage(receiver, message);
       return createdMessage;
     }
   }

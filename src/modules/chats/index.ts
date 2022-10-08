@@ -2,4 +2,8 @@ export * from './controllers/chats.controller';
 export * from './services/chats.service';
 export * from './schemas/chat.schema';
 export * from './schemas/message.schema';
+export * from './dtos/message.dto';
+export * from './dtos/response-chat.dto';
+export * from './dtos/response-message.dto';
+export * from './dtos/response-short-chat.dto';
 export * from './chats.module';

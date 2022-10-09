@@ -6,4 +6,5 @@ export * from './dtos/message.dto';
 export * from './dtos/response-chat.dto';
 export * from './dtos/response-message.dto';
 export * from './dtos/response-short-chat.dto';
+export * from './gateways/chat.gateway';
 export * from './chats.module';

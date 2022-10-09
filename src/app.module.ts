@@ -6,6 +6,7 @@ import { join } from 'path';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { ChatsModule } from './modules/chats/chats.module';
+import { ChatBotModule } from './modules/chat-bot/chat-bot.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ChatsModule } from './modules/chats/chats.module';
     AuthModule,
     UsersModule,
     ChatsModule,
+    ChatBotModule,
   ],
   controllers: [],
   providers: [],

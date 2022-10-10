@@ -16,6 +16,20 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@core/*": ["src/core/*"],
+      "@integrations/*": ["src/integrations/*"],
+      "@modules/*": ["src/modules/*"],
+      "@shared/*": ["src/shared/*"],
+
+      // Integrations
+      "@authentication/*": ["src/integrations/authentication/*"],
+
+      // Modules
+      "@users/*": ["src/modules/users/*"],
+      "@companies/*": ["src/modules/companies/*"],
+      "@suppliers/*": ["src/modules/suppliers/*"]
+    }
   }
 }

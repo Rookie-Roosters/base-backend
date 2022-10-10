@@ -9,20 +9,11 @@ import { Message } from '../schemas/message.schema';
 
 @Injectable()
 export class ChatsService {
-  constructor(
-    @InjectModel(Chats.name) private chatsModel: Model<ChatDocument>,
-  ) {}
+  constructor(@InjectModel(Chats.name) private chatsModel: Model<ChatDocument>) {}
 
-  async create(
-    currentUser: string,
-    receiver: string,
-  ): Promise<ResponseChatDto> {
-    if (currentUser == receiver)
-      throw new ForbiddenException(
-        'Current User cannot be the Receiver at the same time',
-      );
-    if ((await this.count(currentUser, receiver)) > 0)
-      throw new ForbiddenException("Chat mustn't exists");
+  async create(currentUser: string, receiver: string): Promise<ResponseChatDto> {
+    if (currentUser == receiver) throw new ForbiddenException('Current User cannot be the Receiver at the same time');
+    if ((await this.count(currentUser, receiver)) > 0) throw new ForbiddenException("Chat mustn't exists");
     else {
       const createdChat = new this.chatsModel({
         user1: currentUser,
@@ -105,16 +96,11 @@ export class ChatsService {
       .exec();
   }
 
-  async chat(
-    currentUser: string,
-    receiver: string,
-    page: number,
-  ): Promise<ResponseChatDto> {
+  async chat(currentUser: string, receiver: string, page: number): Promise<ResponseChatDto> {
     if (page < 0) throw new ForbiddenException('Page must be greater than 0');
     const first = page * 20;
     const second = page + 1 * 20 - 1;
-    if ((await this.count(currentUser, receiver)) == 0)
-      throw new ForbiddenException('Chat must exists');
+    if ((await this.count(currentUser, receiver)) == 0) throw new ForbiddenException('Chat must exists');
     else {
       const chat = (
         await this.chatsModel.aggregate([
@@ -152,13 +138,8 @@ export class ChatsService {
     }
   }
 
-  async send(
-    currentUser: string,
-    receiver: string,
-    message: string,
-  ): Promise<ResponseMessageDto> {
-    if ((await this.count(currentUser, receiver)) == 0)
-      throw new ForbiddenException('Chat must exists');
+  async send(currentUser: string, receiver: string, message: string): Promise<ResponseMessageDto> {
+    if ((await this.count(currentUser, receiver)) == 0) throw new ForbiddenException('Chat must exists');
     else {
       const createdMessage: Message = {
         date: new Date(),

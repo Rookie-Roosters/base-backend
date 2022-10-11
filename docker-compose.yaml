@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: mysql
+    environment:
+      MYSQL_DATABASE: ${}
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'user'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 'password'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'password'
+
+    ports:
+      - 1433:1433
+    volumes:
+      - ~/apps/mssql/data:/var/lib/mssqlql/data
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${DATABASE_PASSWORD}

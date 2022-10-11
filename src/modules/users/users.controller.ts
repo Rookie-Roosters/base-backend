@@ -1,12 +1,10 @@
-import { Get, Body, Patch, Param, Delete, applyDecorators } from '@nestjs/common';
+import { Get, Body, Patch, Param, Delete } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { API_ENDPOINTS, API_VERSIONS } from '@core/constants';
 import { ApiController, ApiDelete, ApiPost } from '@shared/decorators';
 import { User } from './entities/user.entity';
-import { Column } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
 
 @ApiController(API_ENDPOINTS.USERS.BASE_PATH, API_VERSIONS.V1)
 export class UsersController {

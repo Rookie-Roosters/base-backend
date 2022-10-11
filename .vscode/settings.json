@@ -1,11 +1,7 @@
 {
   "files.exclude": {
     "node_modules": true,
-    "dist": true,
-    ".eslintrc.js": true,
-    ".prettierrc": true,
-    "package-lock.json": true,
-    "tsconfig.build.json": true,
-    ".vscode": true
+    ".vscode": true,
+    "dist": true
   }
 }

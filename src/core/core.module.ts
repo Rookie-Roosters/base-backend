@@ -43,9 +43,9 @@ import { DatabaseService, EnvironmentService } from './services';
         return validatedConfig;
       },
     }),
-    // TypeOrmModule.forRootAsync({
-    //   useClass: DatabaseService,
-    // }),
+    TypeOrmModule.forRootAsync({
+      useClass: DatabaseService,
+    }),
   ],
   exports: [EnvironmentService],
 })

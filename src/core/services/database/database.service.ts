@@ -9,7 +9,7 @@ export class DatabaseService implements TypeOrmOptionsFactory {
   private password: string;
   private port: number;
 
-  constructor(private environmentService: EnvironmentService) {
+  constructor(private readonly environmentService: EnvironmentService) {
     this.username = this.environmentService.get('DATABASE_USERNAME');
     this.password = this.environmentService.get('DATABASE_PASSWORD');
     this.port = this.environmentService.get('DATABASE_PORT');

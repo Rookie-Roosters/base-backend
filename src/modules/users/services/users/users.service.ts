@@ -1,7 +1,7 @@
 import { ImATeapotException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { User, UserDocument } from '@users/schemas';
 import { Model } from 'mongoose';
-import { User, UserDocument } from '../schemas/user.schema';
 
 @Injectable()
 export class UsersService {

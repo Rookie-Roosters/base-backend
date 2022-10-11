@@ -1,7 +1,6 @@
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-
-export type UserDocument = User & Document;
 
 @Schema()
 export class User {
@@ -12,4 +11,5 @@ export class User {
   __v?: number;
 }
 
+export type UserDocument = User & Document;
 export const UserSchema = SchemaFactory.createForClass(User);

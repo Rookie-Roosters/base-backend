@@ -18,9 +18,8 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
+      // Global
       "@core/*": ["src/core/*"],
-      "@integrations/*": ["src/integrations/*"],
-      "@modules/*": ["src/modules/*"],
       "@shared/*": ["src/shared/*"],
 
       // Integrations
@@ -28,6 +27,7 @@
 
       // Modules
       "@users/*": ["src/modules/users/*"],
+      "@chats/*": ["src/modules/chats/*"],
       "@companies/*": ["src/modules/companies/*"],
       "@suppliers/*": ["src/modules/suppliers/*"]
     }

@@ -1,15 +1,11 @@
+import { MessageDto, ResponseChatDto, ResponseShortChatDto } from '@chats/dtos';
+import { ChatsService } from '@chats/services';
+import { API_ENDPOINTS } from '@core/constants';
 import { Controller, Post, Param, Get, Put, Body, Query } from '@nestjs/common';
 import { ApiBody, ApiCreatedResponse, ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { API_ENDPOINTS, API_RESOURCES, DEFAULT_API_PATHS } from 'src/utils/constants/api-routes.constants';
-import { ICommonHttpResponse } from 'src/utils/interfaces/http-response.interface';
-import { MessageDto } from '../dtos/message.dto';
-import { ResponseChatDto } from '../dtos/response-chat.dto';
-import { ResponseMessageDto } from '../dtos/response-message.dto';
-import { ResponseShortChatDto } from '../dtos/response-short-chat.dto';
-import { ChatsService } from '../services/chats.service';
 
 @ApiTags('Chats')
-@Controller(API_RESOURCES.CHATS)
+@Controller(API_ENDPOINTS.CHATS.BASE_PATH)
 export class ChatsController {
   constructor(private readonly chatsService: ChatsService) {}
 

@@ -1,7 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 
+export type MessageDocument = Message & Document;
 @Schema()
 export class Message {
   @ApiProperty({ type: String, description: "Message's primary key" })

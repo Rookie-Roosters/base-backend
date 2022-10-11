@@ -1,12 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { MongooseModule } from '@nestjs/mongoose';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { AuthModule } from './modules/auth/auth.module';
-import { UsersModule } from './modules/users/users.module';
-import { ChatsModule } from './modules/chats/chats.module';
-import { CoreModule } from './core/core.module';
+import { CoreModule } from '@core/core.module';
+import { UsersModule } from '@users/users.module';
+import { ChatsModule } from '@chats/chats.module';
 
 @Module({
   imports: [
@@ -14,10 +11,8 @@ import { CoreModule } from './core/core.module';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client'),
     }),
-    AuthModule,
     UsersModule,
     ChatsModule,
-    CoreModule,
   ],
   controllers: [],
   providers: [],

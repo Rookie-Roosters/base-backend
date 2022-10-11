@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserDto } from 'src/modules/users';
+import { UserDto } from '@users/dtos';
 
 export class ResponseShortChatDto {
   @ApiProperty({

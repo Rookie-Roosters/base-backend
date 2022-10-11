@@ -1,11 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import mongoose from 'mongoose';
-import { User } from 'src/modules/users';
+import { User } from '@users/schemas';
+import mongoose, { Document } from 'mongoose';
 import { Message, MessageSchema } from './message.schema';
 
 export type ChatDocument = Chats & Document;
-
 @Schema()
 export class Chats {
   @ApiProperty({ type: String, description: "Chat's primary key" })

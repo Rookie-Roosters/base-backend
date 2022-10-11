@@ -1,11 +1,8 @@
+import { ResponseChatDto, ResponseMessageDto, ResponseShortChatDto } from '@chats/dtos';
+import { Chats, Message, ChatDocument } from '@chats/schemas';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
-import { ResponseChatDto } from '../dtos/response-chat.dto';
-import { ResponseMessageDto } from '../dtos/response-message.dto';
-import { ResponseShortChatDto } from '../dtos/response-short-chat.dto';
-import { ChatDocument, Chats } from '../schemas/chat.schema';
-import { Message } from '../schemas/message.schema';
 
 @Injectable()
 export class ChatsService {

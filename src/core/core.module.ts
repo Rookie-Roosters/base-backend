@@ -17,18 +17,18 @@ import { DatabaseService, EnvironmentService } from './services';
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
     },
-    {
-      provide: APP_PIPE,
-      useFactory: () => {
-        return new ValidationPipe({
-          whitelist: true,
-          transform: true,
-          transformOptions: {
-            enableImplicitConversion: true,
-          },
-        });
-      },
-    },
+    // {
+    //   provide: APP_PIPE,
+    //   useFactory: () => {
+    //     return new ValidationPipe({
+    //       whitelist: true,
+    //       transform: true,
+    //       transformOptions: {
+    //         enableImplicitConversion: true,
+    //       },
+    //     });
+    //   },
+    // },
   ],
   imports: [
     ConfigModule.forRoot({

@@ -1,3 +1,9 @@
+export const API_VERSIONS = {
+  V1: '1',
+  V2: '2',
+  V3: '3',
+};
+
 export const API_PARAMS = {
   BY_ID: ':id',
 };

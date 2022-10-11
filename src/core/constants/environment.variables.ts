@@ -1,4 +1,4 @@
-import { IsAlphanumeric, IsEnum, IsNumber } from 'class-validator';
+import { IsAlphanumeric, IsEnum, IsNumber, IsInt } from 'class-validator';
 
 export enum Environment {
   DEVELOPMENT = 'development',
@@ -10,12 +10,15 @@ export class EnvironmentVariables {
   @IsEnum(Environment)
   NODE_ENV: Environment;
 
+  @IsInt()
+  VERSION: number;
+
   @IsNumber()
   PORT: number;
 
   @IsAlphanumeric()
-  DATABASE_USER: string;
+  BASE_API_KEY: string;
 
   @IsAlphanumeric()
-  DATABASE_PASSWORD: string;
+  BASE_API_TOKEN: string;
 }

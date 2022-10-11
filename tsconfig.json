@@ -24,12 +24,12 @@
 
       // Integrations
       "@authentication/*": ["src/integrations/authentication/*"],
+      "@base-api/*": ["src/integrations/base-api/*"],
 
       // Modules
       "@users/*": ["src/modules/users/*"],
-      "@chats/*": ["src/modules/chats/*"],
-      "@companies/*": ["src/modules/companies/*"],
-      "@suppliers/*": ["src/modules/suppliers/*"]
+      "@chatbot*": ["src/modules/chatbot/*"],
+      "@chats/*": ["src/modules/chats/*"]
     }
   }
 }

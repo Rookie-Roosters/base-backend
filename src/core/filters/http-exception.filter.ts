@@ -23,7 +23,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       status = exception.getStatus();
       name = exception.name;
       error = exceptionResponse['error'];
-      messages = exceptionResponse['message'];
+      messages = [...exceptionResponse['message']];
       stack = !this.environmentService.isProduction ? exception.stack : null;
     }
 

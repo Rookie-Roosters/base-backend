@@ -19,6 +19,10 @@ export class EnvironmentService {
     return this.get('NODE_ENV') === Environment.PRODUCTION;
   }
 
+  get version(): string {
+    return this.get('VERSION').toString();
+  }
+
   get<K extends keyof EnvironmentVariables, T extends typeof EnvironmentVariables.prototype[K]>(key: K): T {
     return this.configService.get<T>(key);
   }

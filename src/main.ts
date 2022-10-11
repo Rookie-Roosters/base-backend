@@ -5,22 +5,23 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   app.enableCors();
   app.setGlobalPrefix('api');
-  app.enableVersioning({ type: VersioningType.URI });
+  app.enableVersioning({ type: VersioningType.URI, defaultVersion: process.env.VERSION });
 
   const config = new DocumentBuilder()
     .setTitle('BASE Hackathon - Backend')
-    .setDescription('API documentation ')
+    .setDescription('API methods and schemas documentation ')
     .setVersion('1.0')
     .addBearerAuth()
     .setExternalDoc('Postman Collection', '/docs-json')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document, {
-    //swaggerOptions: { defaultModelsExpandDepth: -1 },
-  });
+  SwaggerModule.setup('docs', app, document);
 
-  await app.listen(3000);
+  await app.listen(process.env.PORT || 3000);
+
+  console.log(`Server ready at ${await app.getUrl()}`);
 }
 bootstrap();

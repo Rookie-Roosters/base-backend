@@ -1,12 +1,13 @@
 import { Global, Module, ValidationPipe } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { plainToInstance } from 'class-transformer';
 import { validateSync } from 'class-validator';
 
 import { EnvironmentVariables } from './constants';
 import { HttpExceptionFilter } from './filters';
-import { EnvironmentService } from './services';
+import { DatabaseService, EnvironmentService } from './services';
 
 @Global()
 @Module({
@@ -42,6 +43,9 @@ import { EnvironmentService } from './services';
         return validatedConfig;
       },
     }),
+    // TypeOrmModule.forRootAsync({
+    //   useClass: DatabaseService,
+    // }),
   ],
   exports: [EnvironmentService],
 })

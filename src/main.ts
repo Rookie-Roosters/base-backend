@@ -1,28 +1,26 @@
-import { ValidationPipe } from '@nestjs/common';
-import { HttpAdapterHost, NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { VersioningType } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AllExceptionsFilter } from './utils/filters/all-exceptions.filter';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
+  app.setGlobalPrefix('api');
+  app.enableVersioning({ type: VersioningType.URI });
 
   const config = new DocumentBuilder()
-    .setTitle('BASE - Backend')
+    .setTitle('BASE Hackathon - Backend')
+    .setDescription('API documentation ')
+    .setVersion('1.0')
     .addBearerAuth()
+    .setExternalDoc('Postman Collection', '/docs-json')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document, {
-    swaggerOptions: { defaultModelsExpandDepth: -1 },
+    //swaggerOptions: { defaultModelsExpandDepth: -1 },
   });
 
-  app.useGlobalPipes(new ValidationPipe());
-
-  app.useGlobalFilters(new AllExceptionsFilter(app.get(HttpAdapterHost)));
-  app.useGlobalPipes(new ValidationPipe());
-
-  app.enableCors();
-
-  await app.listen(process.env.PORT || 3000);
+  await app.listen(3000);
 }
 bootstrap();

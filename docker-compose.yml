@@ -13,4 +13,7 @@ services:
     expose:
       - ${DATABASE_PORT}
     volumes:
-      - ~/apps/base:var/lib/mysql
+      - my-db:/var/lib/mysql
+
+volumes:
+  my-db:

@@ -29,7 +29,8 @@
       // Modules
       "@users/*": ["src/modules/users/*"],
       "@chatbot*": ["src/modules/chatbot/*"],
-      "@chats/*": ["src/modules/chats/*"]
+      "@chats/*": ["src/modules/chats/*"],
+      "@automation/*": ["src/modules/automation/*"]
     }
   }
 }

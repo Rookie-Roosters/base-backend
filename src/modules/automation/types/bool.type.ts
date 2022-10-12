@@ -1,4 +1,5 @@
-import { AutomationConditionalIfInterface } from "../interfaces/conditionals/conditional-if.interface";
-import { AutomationInputConstantInterface } from "../interfaces/inputs/input-constant.interface";
+import { AutomationConditionalIf } from "@automation/classes/conditionals/conditional-if";
+import { AutomationInputConstant } from "@automation/classes/inputs/input-constant";
 
-export type AutomationBoolTypes = AutomationInputConstantInterface | AutomationConditionalIfInterface;
+
+export type AutomationBoolTypes = AutomationInputConstant | AutomationConditionalIf;

@@ -1,3 +1,3 @@
-import { AutomationInputConstantInterface } from "../interfaces/inputs/input-constant.interface";
+import { AutomationInputConstant } from "@automation/classes/inputs/input-constant";
 
-export type AutomationNumberTypes = AutomationInputConstantInterface;
+export type AutomationNumberTypes = AutomationInputConstant;

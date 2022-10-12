@@ -26,4 +26,7 @@ export const API_ENDPOINTS = {
     ANSWER: 'answer',
     TRAIN: 'train',
   },
+  AUTOMATION: {
+    BASE_PATH: 'automation',
+  }
 };

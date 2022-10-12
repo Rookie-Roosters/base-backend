@@ -7,6 +7,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
   constructor(private readonly environmentService: EnvironmentService) {}
 
   catch(exception: unknown, host: ArgumentsHost) {
+    console.error(exception);
+
     const isHttpException = exception instanceof HttpException;
     const context = host.switchToHttp();
     const response = context.getResponse<Response>();

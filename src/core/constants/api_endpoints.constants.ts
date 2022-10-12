@@ -20,7 +20,8 @@ export const API_ENDPOINTS = {
   },
   CHATBOT: {
     BASE_PATH: 'chatbot',
-    BY_ID: API_PARAMS.BY_ID,
+    BY_ID: 'id',
+    TOPICS: 'topics',
     QUESTION: 'question',
     ANSWER: 'answer',
     TRAIN: 'train',

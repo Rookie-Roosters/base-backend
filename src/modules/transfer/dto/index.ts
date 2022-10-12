@@ -1,0 +1,1 @@
+export * from "./response-do-transfer-fx.dto"

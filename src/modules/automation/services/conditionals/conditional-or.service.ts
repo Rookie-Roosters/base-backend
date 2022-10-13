@@ -10,6 +10,8 @@ export class AutomationConditionalOrService implements AutomationCommonClass<Aut
     @Inject(forwardRef(() => AutomationCommonService)) private automationCommonService: AutomationCommonService,
   ) {}
 
+  public type: string = 'conditionalOr';
+
   async exec(block: AutomationConditionalOr): Promise<boolean> {
     const input1type = await this.automationCommonService.getOutputType(block.input1);
     const input2type = await this.automationCommonService.getOutputType(block.input2);

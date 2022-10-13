@@ -5,6 +5,8 @@ import { AutomationCommonClass } from '../common/common.class';
 
 @Injectable()
 export class AutomationInputConstantService implements AutomationCommonClass<AutomationInputConstant> {
+  public type: string = 'inputConstant';
+
   async exec(block: AutomationInputConstant): Promise<number | boolean> {
     return block.value;
   }

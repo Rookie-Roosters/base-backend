@@ -10,11 +10,11 @@ export class AutomationConditionalIfService implements AutomationCommonClass<Aut
     @Inject(forwardRef(() => AutomationCommonService)) private automationCommonService: AutomationCommonService,
   ) {}
 
+  public type: string = 'conditionalIf';
+
   async exec(block: AutomationConditionalIf): Promise<boolean> {
     const input1Type = await this.automationCommonService.getOutputType(block.input1);
     const input2Type = await this.automationCommonService.getOutputType(block.input2);
-    console.log(input1Type);
-    console.log(input2Type);
     if ((input1Type == 'number' || input1Type == 'date') && (input2Type == 'number' || input2Type == 'date')) {
       if (input1Type == input2Type) {
         const value1 = await this.automationCommonService.exec(block.input1);

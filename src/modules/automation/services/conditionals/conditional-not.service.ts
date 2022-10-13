@@ -10,6 +10,8 @@ export class AutomationConditionalNotService implements AutomationCommonClass<Au
     @Inject(forwardRef(() => AutomationCommonService)) private automationCommonService: AutomationCommonService,
   ) {}
 
+  public type: string = 'conditionalNot';
+
   async exec(block: AutomationConditionalNot): Promise<boolean> {
     const inputType = await this.automationCommonService.getOutputType(block.input);
     if (inputType == 'boolean' || inputType == 'number') {

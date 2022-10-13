@@ -14,6 +14,8 @@ export class AutomationOutputVariableService implements AutomationCommonClass<Au
     @InjectRepository(AutomationOutputVariableEntity) private automationOutputVariablesRepository: Repository<AutomationOutputVariableEntity>,
   ) {}
 
+  public type: string = 'outputVariable';
+
   async exec(block: AutomationOutputVariable): Promise<number | boolean> {
     const inputType = await this.automationCommonService.getOutputType(block.input);
     if (inputType == 'boolean' || inputType == 'number') {

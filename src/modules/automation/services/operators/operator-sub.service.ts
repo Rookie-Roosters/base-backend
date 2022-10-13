@@ -10,6 +10,8 @@ export class AutomationOperatorSubService implements AutomationCommonClass<Autom
     @Inject(forwardRef(() => AutomationCommonService)) private automationCommonService: AutomationCommonService,
   ) {}
 
+  public type: string = 'operatorSub';
+
   async exec(block: AutomationOperatorSub): Promise<number> {
     const input1type = await this.automationCommonService.getOutputType(block.input1);
     const input2type = await this.automationCommonService.getOutputType(block.input2);

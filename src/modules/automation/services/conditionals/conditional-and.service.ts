@@ -10,6 +10,8 @@ export class AutomationConditionalAndService implements AutomationCommonClass<Au
     @Inject(forwardRef(() => AutomationCommonService)) private automationCommonService: AutomationCommonService,
   ) {}
 
+  public type: string = 'conditionalAnd';
+
   async exec(block: AutomationConditionalAnd): Promise<boolean> {
     const input1type = await this.automationCommonService.getOutputType(block.input1);
     const input2type = await this.automationCommonService.getOutputType(block.input2);

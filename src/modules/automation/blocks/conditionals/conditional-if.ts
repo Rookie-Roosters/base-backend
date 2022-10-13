@@ -1,4 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { AutomationNumberTypes } from '../../types/number.type';
 
 export enum AutomationConditionalIfOperators {

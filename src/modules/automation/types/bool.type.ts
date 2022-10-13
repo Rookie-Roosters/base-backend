@@ -1,5 +1,12 @@
-import { AutomationConditionalIf } from "@automation/classes/conditionals/conditional-if";
-import { AutomationInputConstant } from "@automation/classes/inputs/input-constant";
+import { AutomationConditionalAnd } from '@automation/blocks/conditionals/conditional-and';
+import { AutomationConditionalIf } from '@automation/blocks/conditionals/conditional-if';
+import { AutomationConditionalNot } from '@automation/blocks/conditionals/conditional-not';
+import { AutomationConditionalOr } from '@automation/blocks/conditionals/conditional-or';
+import { AutomationInputConstant } from '@automation/blocks/inputs/input-constant';
 
-
-export type AutomationBoolTypes = AutomationInputConstant | AutomationConditionalIf;
+export type AutomationBoolTypes =
+  | AutomationInputConstant
+  | AutomationConditionalIf
+  | AutomationConditionalAnd
+  | AutomationConditionalOr
+  | AutomationConditionalNot;

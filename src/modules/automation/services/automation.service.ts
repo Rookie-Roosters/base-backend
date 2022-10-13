@@ -1,20 +1,145 @@
-import { Automation } from '@automation/classes/automation';
+import { Automation } from '@automation/blocks/automation';
 import { AutomationOutputTypes } from '@automation/types/output.type';
-import { Injectable } from '@nestjs/common';
+import { Injectable, ForbiddenException } from '@nestjs/common';
 import { AutomationCommonService } from './common/common.service';
+import * as fs from 'fs';
+import { STORAGE_PATHS } from '@core/constants/storage_paths.constant';
+import { InjectRepository } from '@nestjs/typeorm';
+import { AutomationEntity } from '@automation/entities/automation.entity';
+import { DeleteResult, Repository } from 'typeorm';
+import { AutomationResponseDto } from '@automation/dtos/automation-response.dto';
 
 @Injectable()
 export class AutomationService {
   constructor(
+    @InjectRepository(AutomationEntity) private automationRepository: Repository<AutomationEntity>,
     private automationCommonService: AutomationCommonService,
-  ) {}
+  ) {
+  }
 
   private exec(block: AutomationOutputTypes) {
     return this.automationCommonService.exec(block);
   }
 
-  async create(automation: Automation) {
-    const res = this.exec(automation.output);
-    return res;
+  private async findRawOne(company: number, id: number) {
+    //Validate if the company exists
+    const automation = await this.automationRepository.findOne({
+      where: {
+        id,
+        company,
+      },
+    });
+    if (automation) return automation;
+    else throw new ForbiddenException('Automation must exists');
+  }
+
+  private deleteFile(filename: string) {
+    const path = `${STORAGE_PATHS.AUTOMATION}/${filename}.json`;
+    if (fs.existsSync(path)) fs.unlinkSync(path);
+  }
+
+  private createFile(filename: string, automation: Automation) {
+    this.deleteFile(filename);
+    const json = JSON.stringify(automation);
+    fs.writeFileSync(`${STORAGE_PATHS.AUTOMATION}/${filename}.json`, json, 'utf-8');
+  }
+
+  async execute(company: number, id: number): Promise<any> {
+    const automation = await this.findOne(company, id);
+    return await this.exec(automation.automation.output);
+  }
+
+  async rawExecute(automation: Automation) {
+    return await this.exec(automation.output);
+  }
+
+  async create(automation: Automation, company: number): Promise<AutomationResponseDto> {
+    //Check if a company exists
+    const a: Automation = {
+      output: {
+        type: 'outputVariable',
+        name: 'example',
+        input: {
+          type: 'inputConstant',
+          value: 3,
+        },
+      },
+    };
+    const filename = Array(32)
+      .fill(null)
+      .map(() => Math.round(Math.random() * 16).toString(16))
+      .join('');
+    this.createFile(filename, automation);
+    const createdAutomation = await this.automationRepository.save({
+      filename,
+      company,
+    });
+    console.log(createdAutomation);
+    return {
+      id: createdAutomation.id!,
+      company,
+      automation,
+    };
+  }
+
+  async findAll(company: number): Promise<AutomationResponseDto[]> {
+    //Validate if the company exists
+    const automations = await this.automationRepository.find({
+      where: {
+        company,
+      },
+    });
+    return await Promise.all(
+      automations.map(async (automation) => {
+        //Validate if the file exits
+        const json = fs.readFileSync(`${STORAGE_PATHS.AUTOMATION}/${automation.filename}.json`);
+        const automationFile = JSON.parse(json as unknown as string);
+        return {
+          id: automation.id,
+          company,
+          automation: automationFile,
+        };
+      }),
+    );
+  }
+
+  async findOne(company: number, id: number): Promise<AutomationResponseDto> {
+    //Validate if the company exits
+    const automation = await this.automationRepository.findOne({
+      where: {
+        id,
+        company,
+      },
+    });
+    if (automation) {
+      //Validate if the file exits
+      const json = fs.readFileSync(`${STORAGE_PATHS.AUTOMATION}/${automation.filename}.json`);
+      const automationFile = JSON.parse(json as unknown as string);
+      return {
+        id: automation.id,
+        company,
+        automation: automationFile,
+      };
+    } else throw new ForbiddenException('Automation must exists');
+  }
+
+  async updateAutomation(company: number, id: number, automation: Automation): Promise<AutomationResponseDto> {
+    const lastAutomation = await this.findRawOne(company, id);
+    const json = JSON.stringify(automation);
+    fs.writeFileSync(`${STORAGE_PATHS.AUTOMATION}/${lastAutomation.filename}.json`, json, {
+      encoding: 'utf8',
+      flag: 'w',
+    });
+    return {
+      id,
+      company,
+      automation,
+    };
+  }
+
+  async delete(company: number, id: number): Promise<DeleteResult> {
+    const automation = await this.findRawOne(company, id);
+    this.deleteFile(automation.filename);
+    return await this.automationRepository.delete(id);
   }
 }

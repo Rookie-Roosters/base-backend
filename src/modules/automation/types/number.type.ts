@@ -1,3 +1,3 @@
-import { AutomationInputConstant } from "@automation/classes/inputs/input-constant";
+import { AutomationInputConstant } from "@automation/blocks/inputs/input-constant";
 
 export type AutomationNumberTypes = AutomationInputConstant;

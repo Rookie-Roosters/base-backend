@@ -1,4 +1,4 @@
-import { AutomationInputConstant } from '@automation/classes/inputs/input-constant';
+import { AutomationInputConstant } from '@automation/blocks/inputs/input-constant';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

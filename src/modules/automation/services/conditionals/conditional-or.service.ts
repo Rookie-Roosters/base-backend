@@ -1,4 +1,5 @@
 import { AutomationConditionalOr } from '@automation/blocks/conditionals/conditional-or';
+import { AutomationEntity } from '@automation/entities/automation.entity';
 import { Injectable, Inject, forwardRef, ForbiddenException } from '@nestjs/common';
 import { AutomationCommonClass } from '../common/common.class';
 import { AutomationCommonService } from '../common/common.service';
@@ -17,6 +18,11 @@ export class AutomationConditionalOrService implements AutomationCommonClass<Aut
       const value2 = (await this.automationCommonService.exec(block.input2)) as boolean;
       return value1 || value2;
     } else throw new ForbiddenException('or parameters types must be boolean');
+  }
+
+  async save(block: AutomationConditionalOr, automation: AutomationEntity): Promise<void> {
+    await this.automationCommonService.save(block.input1, automation);
+    await this.automationCommonService.save(block.input2, automation);
   }
 
   async getOutputType(block: AutomationConditionalOr): Promise<'boolean'> {

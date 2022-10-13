@@ -1,4 +1,5 @@
 import { AutomationConditionalIf } from '@automation/blocks/conditionals/conditional-if';
+import { AutomationEntity } from '@automation/entities/automation.entity';
 import { Injectable, Inject, forwardRef, ForbiddenException } from '@nestjs/common';
 import { AutomationCommonClass } from '../common/common.class';
 import { AutomationCommonService } from '../common/common.service';
@@ -31,9 +32,16 @@ export class AutomationConditionalIfService implements AutomationCommonClass<Aut
             return value1 <= value2;
           case '>=':
             return value2 >= value2;
+          default:
+            throw new ForbiddenException('if operator must be valid');
         }
       } else throw new ForbiddenException('if parameters types must be equal');
     } else throw new ForbiddenException('if parameters types must be boolean or number');
+  }
+
+  async save(block: AutomationConditionalIf, automation: AutomationEntity): Promise<void> {
+    await this.automationCommonService.save(block.input1, automation);
+    await this.automationCommonService.save(block.input2, automation);
   }
 
   async getOutputType(block: AutomationConditionalIf): Promise<'boolean'> {

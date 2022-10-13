@@ -1,5 +1,9 @@
 import { AutomationOutputVariable } from '@automation/blocks/outputs/output-variable';
+import { AutomationEntity } from '@automation/entities/automation.entity';
+import { AutomationOutputVariableEntity } from '@automation/entities/output/output-variable.entity';
 import { Injectable, Inject, forwardRef, ForbiddenException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { AutomationCommonClass } from '../common/common.class';
 import { AutomationCommonService } from '../common/common.service';
 
@@ -7,6 +11,7 @@ import { AutomationCommonService } from '../common/common.service';
 export class AutomationOutputVariableService implements AutomationCommonClass<AutomationOutputVariable> {
   constructor(
     @Inject(forwardRef(() => AutomationCommonService)) private automationCommonService: AutomationCommonService,
+    @InjectRepository(AutomationOutputVariableEntity) private automationOutputVariablesRepository: Repository<AutomationOutputVariableEntity>,
   ) {}
 
   async exec(block: AutomationOutputVariable): Promise<number | boolean> {
@@ -14,6 +19,14 @@ export class AutomationOutputVariableService implements AutomationCommonClass<Au
     if (inputType == 'boolean' || inputType == 'number') {
       return this.automationCommonService.exec(block.input);
     } else throw new ForbiddenException('output variable parameters types must be boolean or number');
+  }
+
+  async save(block: AutomationOutputVariable, automation: AutomationEntity): Promise<void> {
+    await this.automationOutputVariablesRepository.save({
+      automation,
+      name: block.name,
+    })
+    await this.automationCommonService.save(block.input, automation);
   }
 
   async getOutputType(block: AutomationOutputVariable): Promise<'number' | 'boolean'> {

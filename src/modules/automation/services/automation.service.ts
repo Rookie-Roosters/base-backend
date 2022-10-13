@@ -1,5 +1,4 @@
 import { Automation } from '@automation/blocks/automation';
-import { AutomationOutputTypes } from '@automation/types/output.type';
 import { Injectable, ForbiddenException } from '@nestjs/common';
 import { AutomationCommonService } from './common/common.service';
 import * as fs from 'fs';
@@ -14,11 +13,14 @@ export class AutomationService {
   constructor(
     @InjectRepository(AutomationEntity) private automationRepository: Repository<AutomationEntity>,
     private automationCommonService: AutomationCommonService,
-  ) {
+  ) {}
+
+  private async exec(block: any) {
+    return await this.automationCommonService.exec(block);
   }
 
-  private exec(block: AutomationOutputTypes) {
-    return this.automationCommonService.exec(block);
+  private async save(block: any, automation: AutomationEntity) {
+    await this.automationCommonService.save(block, automation);
   }
 
   private async findRawOne(company: number, id: number) {
@@ -74,7 +76,7 @@ export class AutomationService {
       filename,
       company,
     });
-    console.log(createdAutomation);
+    this.save(automation.output, createdAutomation);
     return {
       id: createdAutomation.id!,
       company,
@@ -124,17 +126,8 @@ export class AutomationService {
   }
 
   async updateAutomation(company: number, id: number, automation: Automation): Promise<AutomationResponseDto> {
-    const lastAutomation = await this.findRawOne(company, id);
-    const json = JSON.stringify(automation);
-    fs.writeFileSync(`${STORAGE_PATHS.AUTOMATION}/${lastAutomation.filename}.json`, json, {
-      encoding: 'utf8',
-      flag: 'w',
-    });
-    return {
-      id,
-      company,
-      automation,
-    };
+    await this.delete(company, id);
+    return this.create(automation, company);
   }
 
   async delete(company: number, id: number): Promise<DeleteResult> {

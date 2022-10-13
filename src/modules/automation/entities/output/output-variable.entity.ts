@@ -1,15 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity,  ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { AutomationEntity } from '../automation.entity';
 
-@Entity()
-export class OutputVariableEntity {
+@Entity('output_variable')
+export class AutomationOutputVariableEntity {
   @ApiProperty({ type: Number, description: 'Output Variable id' })
   @PrimaryGeneratedColumn()
   id?: number;
 
   @ApiProperty({ type: AutomationEntity })
-  @ManyToMany(() => AutomationEntity, (automation) => automation.id, { onDelete: 'CASCADE' })
+  @ManyToOne(() => AutomationEntity, (automation) => automation.id, { onDelete: 'CASCADE' })
   automation: AutomationEntity;
 
   @ApiProperty({ type: String })

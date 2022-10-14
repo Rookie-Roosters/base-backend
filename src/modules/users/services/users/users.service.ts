@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-
 import { User } from '@users/entities';
 import { UserCreateDto, UserUpdateDto } from '@users/dto';
 
@@ -40,4 +39,22 @@ export class UsersService {
     if (!user) throw new NotFoundException('User not found');
     return await this.usersRepository.remove(user);
   }
+
+  async addSocketConnection(id: number, socket: string): Promise<void> {
+    const user = await this.usersRepository.findOneBy({ id: id });
+    user.sockets.push(socket)
+    this.usersRepository.save(user);
+  }
+
+  async deleteSocketConnection(id: number, socket: string): Promise<void> {
+    const user = await this.usersRepository.findOneBy({ id: id });
+    user.sockets = user.sockets.filter(x => x !== socket);
+    this.usersRepository.save(user);
+  }
+
+  async getSockets(id: number): Promise<string[]> {
+    const user = await this.usersRepository.findOneBy({ id: id });
+    return user.sockets;
+  }
 }
+  

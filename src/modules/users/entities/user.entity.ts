@@ -1,27 +1,34 @@
+import { Authentication } from '@authentication/entities';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsInt, IsNumber, IsPositive, IsString } from 'class-validator';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import { IsEmail, IsString } from 'class-validator';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, AfterInsert } from 'typeorm';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  @ApiProperty()
-  @IsInt()
-  @IsPositive()
-  id: number;
+  id?: number;
 
+  @ApiProperty({ description: "User's email address" })
+  @IsEmail()
   @Column()
-  @ApiProperty()
+  email: string;
+
+  @ApiProperty({ description: "User's first name" })
   @IsString()
+  @Column()
   firstName: string;
 
-  @Column()
-  @ApiProperty()
+  @ApiProperty({ description: "User's last name" })
   @IsString()
+  @Column()
   lastName: string;
 
-  @Column({ default: true })
-  @ApiProperty()
-  @IsBoolean()
-  isActive: boolean;
+  @OneToOne(() => Authentication)
+  @JoinColumn()
+  authentication?: Authentication;
+
+  get fullName(): string {
+    return `${this.firstName} ${this.lastName}`;
+  }
 }

@@ -1,11 +1,12 @@
-import { Authentication } from '@authentication/entities';
-import { ApiProperty } from '@nestjs/swagger';
-import { Exclude } from 'class-transformer';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEmail, IsString } from 'class-validator';
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, AfterInsert } from 'typeorm';
+import { Column, OneToOne, JoinColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+
+import { Authentication } from '@authentication/entities';
 
 @Entity()
 export class User {
+  @ApiPropertyOptional({ description: 'User unique identifier' })
   @PrimaryGeneratedColumn()
   id?: number;
 

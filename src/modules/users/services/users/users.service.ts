@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import to from 'await-to-js';
 
 import { User } from '@users/entities';
@@ -21,13 +21,13 @@ export class UsersService {
     return user;
   }
 
-  async findAll(): Promise<User[]> {
-    const users = this.usersRepository.find();
+  async find(options?: FindManyOptions<User>): Promise<User[]> {
+    const users = this.usersRepository.find(options);
     return users;
   }
 
-  async findById(id: number): Promise<User> {
-    const user = await this.usersRepository.findOneBy({ id });
+  async findOne(options: FindOneOptions<User>): Promise<User> {
+    const user = this.usersRepository.findOne(options);
     if (!user) throw new NotFoundException('User not found');
     return user;
   }

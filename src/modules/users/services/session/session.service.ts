@@ -34,8 +34,8 @@ export class SessionService {
 
   async logIn(email: string): Promise<UserAuthTokenDto> {
     const user = await this.usersRepository.findOne({
+      relations: ['authentication'],
       where: { email },
-      relations: { authentication: true },
     });
     if (!user) throw new NotFoundException('User not found');
     const { authToken } = await this.authService.logIn(user.authentication);

@@ -12,10 +12,10 @@ export class AutomationConditionalNotService implements AutomationCommonClass<Au
 
   public type: string = 'conditionalNot';
 
-  async exec(block: AutomationConditionalNot): Promise<boolean> {
-    const inputType = await this.automationCommonService.getOutputType(block.input);
+  async exec(block: AutomationConditionalNot, company?: number): Promise<boolean> {
+    const inputType = await this.automationCommonService.getOutputType(block.input, company);
     if (inputType == 'boolean' || inputType == 'number') {
-      return !(await this.automationCommonService.exec(block.input)) as boolean;
+      return !(await this.automationCommonService.exec(block.input, company)) as boolean;
     } else throw new ForbiddenException('not parameters types must be boolean');
   }
 
@@ -23,7 +23,7 @@ export class AutomationConditionalNotService implements AutomationCommonClass<Au
     await this.automationCommonService.save(block.input, automation);
   }
 
-  async getOutputType(block: AutomationConditionalNot): Promise<'boolean'> {
+  async getOutputType(block: AutomationConditionalNot, company?: number): Promise<'boolean'> {
     return 'boolean';
   }
 }

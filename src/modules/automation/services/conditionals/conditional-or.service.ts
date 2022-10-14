@@ -12,12 +12,12 @@ export class AutomationConditionalOrService implements AutomationCommonClass<Aut
 
   public type: string = 'conditionalOr';
 
-  async exec(block: AutomationConditionalOr): Promise<boolean> {
-    const input1type = await this.automationCommonService.getOutputType(block.input1);
-    const input2type = await this.automationCommonService.getOutputType(block.input2);
+  async exec(block: AutomationConditionalOr, company?: number): Promise<boolean> {
+    const input1type = await this.automationCommonService.getOutputType(block.input1, company);
+    const input2type = await this.automationCommonService.getOutputType(block.input2, company);
     if (input1type == 'boolean' && input2type == 'boolean') {
-      const value1 = (await this.automationCommonService.exec(block.input1)) as boolean;
-      const value2 = (await this.automationCommonService.exec(block.input2)) as boolean;
+      const value1 = (await this.automationCommonService.exec(block.input1, company)) as boolean;
+      const value2 = (await this.automationCommonService.exec(block.input2, company)) as boolean;
       return value1 || value2;
     } else throw new ForbiddenException('or parameters types must be boolean');
   }
@@ -27,7 +27,7 @@ export class AutomationConditionalOrService implements AutomationCommonClass<Aut
     await this.automationCommonService.save(block.input2, automation);
   }
 
-  async getOutputType(block: AutomationConditionalOr): Promise<'boolean'> {
+  async getOutputType(block: AutomationConditionalOr, company?: number): Promise<'boolean'> {
     return 'boolean';
   }
 }

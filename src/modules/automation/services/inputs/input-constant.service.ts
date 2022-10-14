@@ -7,13 +7,13 @@ import { AutomationCommonClass } from '../common/common.class';
 export class AutomationInputConstantService implements AutomationCommonClass<AutomationInputConstant> {
   public type: string = 'inputConstant';
 
-  async exec(block: AutomationInputConstant): Promise<number | boolean> {
+  async exec(block: AutomationInputConstant, company?: number): Promise<number | boolean> {
     return block.value;
   }
 
   async save(block: AutomationInputConstant, automation: AutomationEntity): Promise<void> {}
 
-  async getOutputType(block: AutomationInputConstant): Promise<'number' | 'boolean'> {
+  async getOutputType(block: AutomationInputConstant, company?: number): Promise<'number' | 'boolean'> {
     if (block.value === false || block.value === true) return 'boolean';
     else return 'number';
   }

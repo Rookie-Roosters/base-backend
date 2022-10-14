@@ -1,3 +1,4 @@
+import { AutomationInputVariable } from '@automation/blocks';
 import { AutomationConditionalAnd } from '@automation/blocks/conditionals/conditional-and';
 import { AutomationConditionalIf } from '@automation/blocks/conditionals/conditional-if';
 import { AutomationConditionalNot } from '@automation/blocks/conditionals/conditional-not';
@@ -9,4 +10,5 @@ export type AutomationBoolTypes =
   | AutomationConditionalIf
   | AutomationConditionalAnd
   | AutomationConditionalOr
-  | AutomationConditionalNot;
+  | AutomationConditionalNot
+  | AutomationInputVariable;

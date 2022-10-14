@@ -15,8 +15,8 @@ export class AutomationService {
     private automationCommonService: AutomationCommonService,
   ) {}
 
-  private async exec(block: any) {
-    return await this.automationCommonService.exec(block);
+  private async exec(block: any, company?: number) {
+    return await this.automationCommonService.exec(block, company);
   }
 
   private async save(block: any, automation: AutomationEntity) {
@@ -48,7 +48,7 @@ export class AutomationService {
 
   async execute(company: number, id: number): Promise<any> {
     const automation = await this.findOne(company, id);
-    return await this.exec(automation.automation.output);
+    return await this.exec(automation.automation.output, company);
   }
 
   async rawExecute(automation: Automation) {
@@ -57,16 +57,6 @@ export class AutomationService {
 
   async create(automation: Automation, company: number): Promise<AutomationResponseDto> {
     //Check if a company exists
-    const a: Automation = {
-      output: {
-        type: 'outputVariable',
-        name: 'example',
-        input: {
-          type: 'inputConstant',
-          value: 3,
-        },
-      },
-    };
     const filename = Array(32)
       .fill(null)
       .map(() => Math.round(Math.random() * 16).toString(16))
@@ -76,12 +66,17 @@ export class AutomationService {
       filename,
       company,
     });
-    this.save(automation.output, createdAutomation);
-    return {
-      id: createdAutomation.id!,
-      company,
-      automation,
-    };
+    try {
+      await this.save(automation.output, createdAutomation);
+      return {
+        id: createdAutomation.id!,
+        company,
+        automation,
+      };
+    } catch (ex) {
+      await this.delete(company, createdAutomation.id);
+      throw new ForbiddenException(ex);
+    }
   }
 
   async findAll(company: number): Promise<AutomationResponseDto[]> {

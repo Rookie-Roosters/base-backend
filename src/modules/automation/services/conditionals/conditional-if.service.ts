@@ -12,13 +12,13 @@ export class AutomationConditionalIfService implements AutomationCommonClass<Aut
 
   public type: string = 'conditionalIf';
 
-  async exec(block: AutomationConditionalIf): Promise<boolean> {
-    const input1Type = await this.automationCommonService.getOutputType(block.input1);
-    const input2Type = await this.automationCommonService.getOutputType(block.input2);
+  async exec(block: AutomationConditionalIf, company?: number): Promise<boolean> {
+    const input1Type = await this.automationCommonService.getOutputType(block.input1, company);
+    const input2Type = await this.automationCommonService.getOutputType(block.input2, company);
     if ((input1Type == 'number' || input1Type == 'date') && (input2Type == 'number' || input2Type == 'date')) {
       if (input1Type == input2Type) {
-        const value1 = await this.automationCommonService.exec(block.input1);
-        const value2 = await this.automationCommonService.exec(block.input2);
+        const value1 = await this.automationCommonService.exec(block.input1, company);
+        const value2 = await this.automationCommonService.exec(block.input2, company);
         switch (block.operator) {
           case '=':
             return value1 == value2;
@@ -44,7 +44,7 @@ export class AutomationConditionalIfService implements AutomationCommonClass<Aut
     await this.automationCommonService.save(block.input2, automation);
   }
 
-  async getOutputType(block: AutomationConditionalIf): Promise<'boolean'> {
+  async getOutputType(block: AutomationConditionalIf, company?: number): Promise<'boolean'> {
     return 'boolean';
   }
 }

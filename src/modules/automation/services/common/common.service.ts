@@ -7,6 +7,7 @@ import {
   AutomationConditionalOrService,
 } from '../conditionals';
 import { AutomationInputConstantService } from '../inputs';
+import { AutomationInputVariableService } from '../inputs/input-variable.service';
 import {
   AutomationOperatorAddService,
   AutomationOperatorDivService,
@@ -23,6 +24,8 @@ export class AutomationCommonService {
     //Inputs
     @Inject(forwardRef(() => AutomationInputConstantService))
     private automationInputConstantService: AutomationInputConstantService,
+    @Inject(forwardRef(() => AutomationInputVariableService))
+    private automationInputVariableService: AutomationInputVariableService,
 
     //Operators
     @Inject(forwardRef(() => AutomationOperatorAddService))
@@ -53,22 +56,22 @@ export class AutomationCommonService {
     private automationOutputVariableService: AutomationOutputVariableService,
   ) {}
 
-  async exec(block: any) {
+  async exec(block: any, company: number) {
     const attributes = Object.getOwnPropertyNames(this);
-    for (let attribute of attributes) if (this[attribute].type == block.type) return await this[attribute].exec(block);
+    for (let attribute of attributes) if (this[attribute].type == block.type) return await this[attribute].exec(block, company);
     throw new ForbiddenException(`Attribute not found in common.exec`);
   }
 
   async save(block: any, automation: AutomationEntity) {
     const attributes = Object.getOwnPropertyNames(this);
-    for (let attribute of attributes) if (this[attribute].type == block.type) return await this[attribute].save(block);
+    for (let attribute of attributes) if (this[attribute].type == block.type) return await this[attribute].save(block, automation);
     throw new ForbiddenException(`Attribute not found in common.save`);
   }
 
-  async getOutputType(block: any): Promise<'boolean' | 'number' | 'date'> {
+  async getOutputType(block: any, company: number): Promise<'boolean' | 'number' | 'date'> {
     const attributes = Object.getOwnPropertyNames(this);
     for (let attribute of attributes)
-      if (this[attribute].type == block.type) return await this[attribute].getOutputType(block);
+      if (this[attribute].type == block.type) return await this[attribute].getOutputType(block, company);
     throw new ForbiddenException(`Attribute not found in common.getOutputType`);
   }
 }

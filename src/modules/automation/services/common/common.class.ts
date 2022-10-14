@@ -3,11 +3,11 @@ import { AutomationEntity } from "@automation/entities/automation.entity";
 export abstract class AutomationCommonClass<C> {
   public readonly type: string;
 
-  async exec(block: C): Promise<unknown> {
+  async exec(block: C, company?: number): Promise<unknown> {
     throw new Error('This is a abstract class');
   }
 
-  async getOutputType(block: C): Promise<unknown> {
+  async getOutputType(block: C, company?: number): Promise<unknown> {
     throw new Error('This is a abstract class');
   }
 

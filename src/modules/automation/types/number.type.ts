@@ -1,4 +1,4 @@
-import { AutomationInputConstant } from '@automation/blocks';
+import { AutomationInputConstant, AutomationInputVariable } from '@automation/blocks';
 import {
   AutomationOperatorAdd,
   AutomationOperatorDiv,
@@ -11,4 +11,5 @@ export type AutomationNumberTypes =
   | AutomationOperatorAdd
   | AutomationOperatorDiv
   | AutomationOperatorMul
-  | AutomationOperatorSub;
+  | AutomationOperatorSub
+  | AutomationInputVariable;

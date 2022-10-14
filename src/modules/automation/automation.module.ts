@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AutomationController } from './controllers/automation.controller';
 import { AutomationEntity } from './entities/automation.entity';
+import { AutomationInputVariableEntity } from './entities/inputs/input-variable.entity';
 import { AutomationOutputVariableEntity } from './entities/output/output-variable.entity';
 import { AutomationService } from './services/automation.service';
 import { AutomationCommonService } from './services/common/common.service';
@@ -12,6 +13,7 @@ import {
   AutomationConditionalOrService,
 } from './services/conditionals';
 import { AutomationInputConstantService } from './services/inputs';
+import { AutomationInputVariableService } from './services/inputs/input-variable.service';
 import {
   AutomationOperatorAddService,
   AutomationOperatorDivService,
@@ -22,7 +24,13 @@ import {
 } from './services/operators';
 import { AutomationOutputVariableService } from './services/outputs';
 @Module({
-  imports: [TypeOrmModule.forFeature([AutomationEntity, AutomationOutputVariableEntity])],
+  imports: [
+    TypeOrmModule.forFeature([
+      AutomationEntity,
+      AutomationOutputVariableEntity,
+      AutomationInputVariableEntity
+    ]),
+  ],
   controllers: [AutomationController],
   providers: [
     AutomationService,
@@ -30,6 +38,7 @@ import { AutomationOutputVariableService } from './services/outputs';
 
     //Inputs
     AutomationInputConstantService,
+    AutomationInputVariableService,
 
     //Conditionals
     AutomationConditionalIfService,

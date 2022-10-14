@@ -1,6 +1,6 @@
-import { Global, Module, ValidationPipe } from '@nestjs/common';
+import { ClassSerializerInterceptor, Global, Module, ValidationPipe } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { plainToInstance } from 'class-transformer';
 import { validateSync } from 'class-validator';
@@ -8,6 +8,7 @@ import { validateSync } from 'class-validator';
 import { EnvironmentVariables } from './constants';
 import { HttpExceptionFilter } from './filters';
 import { DatabaseService, EnvironmentService } from './services';
+import { AuthenticationModule } from '@authentication/authentication.module';
 
 @Global()
 @Module({
@@ -17,18 +18,14 @@ import { DatabaseService, EnvironmentService } from './services';
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
     },
-    // {
-    //   provide: APP_PIPE,
-    //   useFactory: () => {
-    //     return new ValidationPipe({
-    //       whitelist: true,
-    //       transform: true,
-    //       transformOptions: {
-    //         enableImplicitConversion: true,
-    //       },
-    //     });
-    //   },
-    // },
+    {
+      provide: APP_PIPE,
+      useClass: ValidationPipe,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor,
+    },
   ],
   imports: [
     ConfigModule.forRoot({
@@ -46,7 +43,8 @@ import { DatabaseService, EnvironmentService } from './services';
     TypeOrmModule.forRootAsync({
       useClass: DatabaseService,
     }),
+    AuthenticationModule,
   ],
-  exports: [EnvironmentService],
+  exports: [EnvironmentService, AuthenticationModule],
 })
 export class CoreModule {}

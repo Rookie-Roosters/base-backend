@@ -2,11 +2,13 @@ import { applyDecorators, Controller, Delete, Get, HttpCode, HttpStatus, Patch, 
 import { ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { startCase } from 'lodash';
 
-import { API_RESPONSES } from '@core/constants';
+import { API_RESPONSES, API_VERSIONS } from '@core/constants';
 
-export function ApiController(name: string, version: string): ClassDecorator {
+export function ApiController(name: string, params?: { version?: string; apiTag?: string }): ClassDecorator {
+  const version = params?.version ?? API_VERSIONS.V1;
+  const tag = startCase(params?.apiTag ?? name);
   return applyDecorators(
-    ApiTags(startCase(name)),
+    ApiTags(tag),
     Controller({
       path: name,
       version,

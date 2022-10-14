@@ -1,9 +1,9 @@
-import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { EnvironmentService } from '@core/services';
 import { AppModule } from './app.module';
 import helmet from 'helmet';
-import { EnvironmentService } from '@core/services';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

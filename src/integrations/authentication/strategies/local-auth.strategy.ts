@@ -5,13 +5,12 @@ import { AuthenticationService } from '@authentication/services';
 import { Authentication } from '@authentication/entities';
 
 @Injectable()
-export class LocalStrategy extends PassportStrategy(Strategy) {
-  constructor(private readonly authenticationService: AuthenticationService) {
-    super({ usernameField: 'identifier' });
+export class LocalAuthStrategy extends PassportStrategy(Strategy) {
+  constructor(private readonly authService: AuthenticationService) {
+    super({ usernameField: 'email' });
   }
-
-  async validate(identifier: string, password: string): Promise<Authentication> {
-    const registry = await this.authenticationService.getRegistry(identifier, password);
+  async validate(email: string, password: string): Promise<Authentication> {
+    const registry = await this.authService.validateByCredentials(email, password);
     return registry;
   }
 }

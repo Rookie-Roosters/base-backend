@@ -12,8 +12,11 @@ export const API_ENDPOINTS = {
   USERS: {
     BASE_PATH: 'users',
     BY_ID: API_PARAMS.BY_ID,
-    LOG_IN: 'log-in',
-    SIGN_UP: 'sign-up',
+    SESSION: {
+      BASE_PATH: 'session',
+      LOG_IN: 'log-in',
+      SIGN_UP: 'sign-up',
+    },
   },
   CHATS: {
     BASE_PATH: 'chats',

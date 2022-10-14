@@ -1,10 +1,10 @@
 import { ChatbotService } from '@chatbotservices/chatbot.service';
-import { API_ENDPOINTS, API_VERSIONS } from '@core/constants';
+import { API_ENDPOINTS } from '@core/constants';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiController } from '@shared/decorators';
 
 @ApiTags('Chatbot')
-@ApiController(API_ENDPOINTS.CHATBOT.BASE_PATH, API_VERSIONS.V1)
+@ApiController(API_ENDPOINTS.CHATBOT.BASE_PATH)
 export class ChatbotController {
   constructor(private readonly chatbotService: ChatbotService) {}
 

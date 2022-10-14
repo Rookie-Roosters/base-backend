@@ -1,14 +1,9 @@
+import { Authentication } from '@authentication/entities';
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from '@users/entities';
 
 export class AuthTokenResponse {
   @ApiProperty()
-  user: User;
+  authentication: Authentication;
   @ApiProperty()
   authToken: string;
-}
-
-export interface IDecodedToken {
-  userId: number;
-  identifier: string;
 }

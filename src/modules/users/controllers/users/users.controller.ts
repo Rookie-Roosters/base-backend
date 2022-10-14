@@ -1,48 +1,16 @@
-import { Body, Param, Req, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiParam } from '@nestjs/swagger';
+import { Body, Param, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 
 import { ApiController, ApiDelete, ApiGet, ApiPatch, ApiPost } from '@shared/decorators';
-import { API_ENDPOINTS, API_VERSIONS, IHttpResponse } from '@core/constants';
+import { API_ENDPOINTS, IHttpResponse } from '@core/constants';
 import { User } from '@users/entities';
 import { UsersService } from '@users/services';
 import { UserCreateDto, UserUpdateDto } from '@users/dto';
-import { AuthTokenResponse } from '@users/constants/authentication.constants';
-import { UserLogInDto } from '@users/dto/user-login.dto';
-import { LocalAuthGuard } from '@authentication/guards';
-import { UserSignUpDto } from '@users/dto/user-signup.dto';
-import { Authentication } from '@authentication/entities';
-import { CurrentAuth } from '@authentication/decorators';
-import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from '@authentication/guards';
 
-interface RequestWithAuth extends Request {
-  authentication: Authentication;
-}
-
-@ApiController(API_ENDPOINTS.USERS.BASE_PATH, API_VERSIONS.V1)
+@ApiController(API_ENDPOINTS.USERS.BASE_PATH)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
-  @ApiPost({
-    path: API_ENDPOINTS.USERS.LOG_IN,
-    responseType: AuthTokenResponse,
-  })
-  @UseGuards(AuthGuard('local'))
-  @ApiBody({ type: UserLogInDto })
-  async logIn(@CurrentAuth() authentication: Authentication) {
-    const user = await this.usersService.findByEmail(authentication.identifier);
-    const data: AuthTokenResponse = { user, authToken: '2' };
-    return { data };
-  }
-
-  @ApiPost({
-    path: API_ENDPOINTS.USERS.SIGN_UP,
-    responseType: AuthTokenResponse,
-  })
-  async signUp(@Body() body: UserSignUpDto): Promise<IHttpResponse<AuthTokenResponse>> {
-    const user = await this.usersService.signUp(body);
-    const data: AuthTokenResponse = { user, authToken: '777' };
-    return { data };
-  }
 
   @ApiPost({
     summary: 'Create a new `User`',
@@ -61,6 +29,8 @@ export class UsersController {
     responseDescription: 'A list of models containing the information of every `User` in the database',
     responseType: [User],
   })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   async findAll(): Promise<IHttpResponse<User[]>> {
     const data = await this.usersService.findAll();
     return { data };

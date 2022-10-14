@@ -1,39 +1,60 @@
 import { Authentication } from '@authentication/entities/authentication.entity';
-import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import to from 'await-to-js';
 
-import { AuthenticationCreateDto } from '@authentication/dto';
+import { AuthenticationSignUpDto } from '@authentication/dto';
+import { IDecodedToken } from '@authentication/constants';
+import { AuthTokenResponse } from '@authentication/constants/auth-token-response.constant';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthenticationService {
   constructor(
     @InjectRepository(Authentication)
-    private authenticationRepository: Repository<Authentication>,
+    private readonly authRepository: Repository<Authentication>,
+    private readonly jwtService: JwtService,
   ) {}
 
-  async createRegistry(dto: AuthenticationCreateDto): Promise<Authentication> {
+  async validateByCredentials(identifier: string, plainTextPassword: string): Promise<Authentication> {
+    const authentication = await this.authRepository.findOneBy({ identifier });
+    const matches = await bcrypt.compare(plainTextPassword, authentication.passwordHash);
+    if (!matches) throw new UnauthorizedException('Wrong credentials provided');
+    return authentication;
+  }
+
+  async validateByToken(payload: IDecodedToken): Promise<Authentication> {
+    const authentication = await this.authRepository.findOneBy({ id: payload.authId });
+    if (!authentication) throw new NotFoundException('Authentication registry not longer exists');
+    return authentication;
+  }
+
+  async logIn(authentication: Authentication): Promise<AuthTokenResponse> {
+    return {
+      authentication,
+      authToken: this.jwtService.sign({
+        authId: authentication.id,
+        identifier: authentication.identifier,
+      } as IDecodedToken),
+    };
+  }
+
+  async signUp(dto: AuthenticationSignUpDto): Promise<AuthTokenResponse> {
     const hashedPassword = await bcrypt.hash(dto.plainTextPassword, 10);
-    const registry = this.authenticationRepository.create({
+    const authentication = this.authRepository.create({
       identifier: dto.identifier,
       passwordHash: hashedPassword,
     });
-    const [err] = await to(this.authenticationRepository.save(registry));
+    const [err] = await to(this.authRepository.save(authentication));
     if (err) throw new ConflictException('A registry with this identifier already exists', err.message);
-    return registry;
-  }
-
-  async getRegistry(identifier: string, plainTextPassword: string): Promise<Authentication> {
-    const registry = await this.authenticationRepository.findOneBy({ identifier });
-    await this.verifyPassword(plainTextPassword, registry.passwordHash);
-    return registry;
-  }
-
-  private async verifyPassword(password: string, hashedPassword: string): Promise<boolean> {
-    const matches = await bcrypt.compare(password, hashedPassword);
-    if (!matches) throw new BadRequestException('Wrong credentials provided');
-    return true;
+    return {
+      authentication,
+      authToken: this.jwtService.sign({
+        authId: authentication.id,
+        identifier: dto.identifier,
+      } as IDecodedToken),
+    };
   }
 }

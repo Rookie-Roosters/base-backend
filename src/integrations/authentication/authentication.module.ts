@@ -1,13 +1,26 @@
 import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { EnvironmentService } from '@core/services';
+import { AuthenticationService } from './services';
 import { Authentication } from './entities';
-import { AuthenticationService } from './services/authentication/authentication.service';
-import { LocalStrategy } from './strategies';
+import { JwtAuthStrategy, LocalAuthStrategy } from './strategies';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Authentication]), PassportModule],
-  providers: [AuthenticationService, LocalStrategy],
+  imports: [
+    PassportModule,
+    JwtModule.registerAsync({
+      inject: [EnvironmentService],
+      useFactory: (environmentService: EnvironmentService) => ({
+        secret: environmentService.get('JWT_SECRET'),
+        signOptions: { expiresIn: environmentService.get('JWT_EXPIRATION_TIME') },
+      }),
+    }),
+    TypeOrmModule.forFeature([Authentication]),
+  ],
+  providers: [AuthenticationService, LocalAuthStrategy, JwtAuthStrategy],
   exports: [AuthenticationService],
 })
 export class AuthenticationModule {}

@@ -28,6 +28,7 @@
 
       // Modules
       "@users/*": ["src/modules/users/*"],
+      "@companies/*": ["src/modules/companies/*"],
       "@chatbot*": ["src/modules/chatbot/*"],
       "@chats/*": ["src/modules/chats/*"]
     }

@@ -45,21 +45,5 @@ export class UsersService {
     return await this.usersRepository.remove(user);
   }
 
-  async addSocketConnection(id: number, socket: string): Promise<void> {
-    const user = await this.usersRepository.findOneBy({ id: id });
-    user.sockets.push(socket)
-    this.usersRepository.save(user);
-  }
-
-  async deleteSocketConnection(id: number, socket: string): Promise<void> {
-    const user = await this.usersRepository.findOneBy({ id: id });
-    user.sockets = user.sockets.filter(x => x !== socket);
-    this.usersRepository.save(user);
-  }
-
-  async getSockets(id: number): Promise<string[]> {
-    const user = await this.usersRepository.findOneBy({ id: id });
-    return user.sockets;
-  }
 }
   

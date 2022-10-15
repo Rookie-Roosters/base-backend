@@ -14,8 +14,9 @@ export class NotificationsService{
     private readonly usersRepository: Repository<User>,
   ) {}
   
-  async save(notification: Notification) {
-    await this.notificationsRepository.save(notification);
+  async save(text: string, link: string, user:User) {
+    const notification = this.notificationsRepository.create({text:text, link:link, date:Date.now(), isAlreadySeen:false, user:user});
+    return await this.notificationsRepository.save(notification);
   }
 
   async findByUser(userId: number) {
@@ -30,10 +31,10 @@ export class NotificationsService{
 
 
   async update(id: number, updateNotificationDto: UpdateNotificationDto) {
-    return await this.notificationsRepository.save({id: id, isAlreadySeen: true})
+    await this.notificationsRepository.update(id, { isAlreadySeen: true })
   }
 
   async updateAllByUser(userId: number) {
-    //const notifications = await this.notificationsRepository.createQueryBuilder().update(Notification).set({isAlreadySeen: true}).where("user = :user", { id: userId }).execute()
+    //await this.notificationsRepository.update({user:userId}, { isAlreadySeen: true })
   }
 }

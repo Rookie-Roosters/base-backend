@@ -29,10 +29,7 @@ export class User {
   @ApiProperty()
   @IsBoolean()
   isActive: boolean;
-//Not normalized yet
-  @ApiProperty({type: [String], description: "User's socket connections"})
-  @IsString()
-  sockets: string[];
+  
   @OneToOne(() => Authentication)
   @JoinColumn()
   authentication?: Authentication;

@@ -1,11 +1,10 @@
-import { ChatbotService } from "@chatbotservices/chatbot.service";
-import { API_ENDPOINTS, API_VERSIONS } from "@core/constants";
-import { ApiTags } from "@nestjs/swagger";
-import { ApiController } from "@shared/decorators";
-
+import { ChatbotService } from '@chatbotservices/chatbot.service';
+import { API_ENDPOINTS } from '@core/constants';
+import { ApiTags } from '@nestjs/swagger';
+import { ApiController } from '@shared/decorators';
 
 @ApiTags('Chatbot')
-@ApiController(API_ENDPOINTS.CHATBOT.BASE_PATH, API_VERSIONS.V1)
+@ApiController(API_ENDPOINTS.CHATBOT.BASE_PATH)
 export class ChatbotController {
   constructor(private readonly chatbotService: ChatbotService) {}
 
@@ -15,11 +14,10 @@ export class ChatbotController {
   //   description: 'Trains the `chatbot` with the new topics, questions or answers',
   // })
   // @ApiOkResponse()
-  // async train(): Promise<ICommonHttpResponse<void>> {
+  // async train(): Promise<ICommonIHttpResponse<void>> {
   //   await this.chatBotService.train();
   //   return {};
   // }
-
 
   // @Post(API_ENDPOINTS.CHAT_BOT.TOPICS)
   // @ApiOperation({
@@ -34,7 +32,7 @@ export class ChatbotController {
   // })
   // async createTopic(
   //   @Body() topic: RequestTopicDto,
-  // ): Promise<ICommonHttpResponse<ResponseTopicDto>> {
+  // ): Promise<ICommonIHttpResponse<ResponseTopicDto>> {
   //   return {
   //     data: await this.chatBotService.createTopic(topic),
   //   };
@@ -46,7 +44,7 @@ export class ChatbotController {
   //   description: 'Returns all `chatbot` topics',
   // })
   // @ApiOkResponse({ type: [ResponseTopicDto], description: '`chatbog` topics' })
-  // async findAll(): Promise<ICommonHttpResponse<ResponseTopicDto[]>> {
+  // async findAll(): Promise<ICommonIHttpResponse<ResponseTopicDto[]>> {
   //   return {
   //     data: await this.chatBotService.findAll(),
   //   };
@@ -61,7 +59,7 @@ export class ChatbotController {
   // @ApiOkResponse()
   // async delete(
   //   @Param(DEFAULT_API_PATHS.BY_ID, ValidateIdPipe) _id: string,
-  // ): Promise<ICommonHttpResponse<void>> {
+  // ): Promise<ICommonIHttpResponse<void>> {
   //   await this.chatBotService.delete(_id);
   //   return {};
   // }
@@ -80,7 +78,7 @@ export class ChatbotController {
   // async addQuestion(
   //   @Param(DEFAULT_API_PATHS.BY_ID, ValidateIdPipe) _id: string,
   //   @Body() questionDto: QuestionDto,
-  // ): Promise<ICommonHttpResponse<ResponseTopicDto>> {
+  // ): Promise<ICommonIHttpResponse<ResponseTopicDto>> {
   //   return {
   //     data: await this.chatBotService.addQuestion(_id, questionDto),
   //   };
@@ -103,7 +101,7 @@ export class ChatbotController {
   // async deleteQuestion(
   //   @Param(DEFAULT_API_PATHS.BY_ID, ValidateIdPipe) _id: string,
   //   @Body() questionDto: QuestionDto,
-  // ): Promise<ICommonHttpResponse<ResponseTopicDto>> {
+  // ): Promise<ICommonIHttpResponse<ResponseTopicDto>> {
   //   return {
   //     data: await this.chatBotService.deleteQuestion(_id, questionDto),
   //   };
@@ -123,7 +121,7 @@ export class ChatbotController {
   // async addAnswer(
   //   @Param(DEFAULT_API_PATHS.BY_ID, ValidateIdPipe) _id: string,
   //   @Body() answerDto: AnswerDto,
-  // ): Promise<ICommonHttpResponse<ResponseTopicDto>> {
+  // ): Promise<ICommonIHttpResponse<ResponseTopicDto>> {
   //   return {
   //     data: await this.chatBotService.addAnswer(_id, answerDto),
   //   };
@@ -143,7 +141,7 @@ export class ChatbotController {
   // async deleteAnswer(
   //   @Param(DEFAULT_API_PATHS.BY_ID, ValidateIdPipe) _id: string,
   //   @Body() answerDto: AnswerDto,
-  // ): Promise<ICommonHttpResponse<ResponseTopicDto>> {
+  // ): Promise<ICommonIHttpResponse<ResponseTopicDto>> {
   //   return {
   //     data: await this.chatBotService.deleteAnswer(_id, answerDto),
   //   };
@@ -162,7 +160,7 @@ export class ChatbotController {
   // @ApiOkResponse({ type: AnswerDto, description: 'The `chatbot` answer' })
   // async chatbot(
   //   @Query('question', ValidateQuestionPipe) question: string, //Validate the question :(
-  // ): Promise<ICommonHttpResponse<AnswerDto>> {
+  // ): Promise<ICommonIHttpResponse<AnswerDto>> {
   //   return {
   //     data: await this.chatBotService.chatbot(question),
   //   };

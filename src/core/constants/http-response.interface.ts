@@ -1,4 +1,4 @@
-export interface HttpResponse<T = any> {
+export interface IHttpResponse<T = any> {
   data?: T;
   error?: {
     status: number;

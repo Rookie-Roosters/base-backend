@@ -1,13 +1,15 @@
 import { Body, Param } from '@nestjs/common';
 import { ApiParam } from '@nestjs/swagger';
 
-import { ApiController, ApiDelete, ApiGet, ApiPatch, ApiPost } from '@shared/decorators';
-import { API_ENDPOINTS, API_VERSIONS, HttpResponse } from '@core/constants';
+import { ApiController, ApiDelete, ApiGet, ApiPatch, ApiPost, EntityByIdParam } from '@shared/decorators';
+import { API_ENDPOINTS, IHttpResponse } from '@core/constants';
 import { User } from '@users/entities';
 import { UsersService } from '@users/services';
 import { UserCreateDto, UserUpdateDto } from '@users/dto';
+import { CurrentAuth } from '@authentication/decorators';
+import { UseSessionGuard } from '@users/decorators';
 
-@ApiController(API_ENDPOINTS.USERS.BASE_PATH, API_VERSIONS.V1)
+@ApiController(API_ENDPOINTS.USERS.BASE_PATH)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -17,7 +19,7 @@ export class UsersController {
     responseDescription: 'A model containing the newly created `User` information',
     responseType: User,
   })
-  async create(@Body() dto: UserCreateDto): Promise<HttpResponse<User>> {
+  async create(@Body() dto: UserCreateDto): Promise<IHttpResponse<User>> {
     const data = await this.usersService.create(dto);
     return { data };
   }
@@ -28,8 +30,10 @@ export class UsersController {
     responseDescription: 'A list of models containing the information of every `User` in the database',
     responseType: [User],
   })
-  async findAll(): Promise<HttpResponse<User[]>> {
-    const data = await this.usersService.findAll();
+  @UseSessionGuard()
+  async find(@CurrentAuth() user: User): Promise<IHttpResponse<User[]>> {
+    console.log(user);
+    const data = await this.usersService.find();
     return { data };
   }
 
@@ -41,8 +45,8 @@ export class UsersController {
     responseType: User,
   })
   @ApiParam({ name: 'id', type: Number })
-  async findById(@Param('id') id: number): Promise<HttpResponse<User>> {
-    const data = await this.usersService.findById(id);
+  async findById(@Param('id') id: number): Promise<IHttpResponse<User>> {
+    const data = await this.usersService.findOne({ where: { id } });
     return { data };
   }
 
@@ -53,8 +57,9 @@ export class UsersController {
     responseDescription: 'A model containing the updated information of the matched `User`',
     responseType: User,
   })
-  async updateById(@Param('id') id: number, @Body() body: UserUpdateDto): Promise<HttpResponse<User>> {
-    const data = await this.usersService.updateById(id, body);
+  @ApiParam({ name: 'id', type: Number })
+  async updateById(@EntityByIdParam(User) user: User, @Body() body: UserUpdateDto): Promise<IHttpResponse<User>> {
+    const data = await this.usersService.updateById(user.id, body);
     return { data };
   }
 
@@ -65,8 +70,9 @@ export class UsersController {
     responseDescription: 'A model containing the information of the deleted `User`',
     responseType: User,
   })
-  async deleteById(@Param('id') id: number): Promise<HttpResponse<User>> {
-    const data = await this.usersService.deleteById(id);
+  @ApiParam({ name: 'id', type: Number })
+  async deleteById(@EntityByIdParam(User) user: User): Promise<IHttpResponse<User>> {
+    const data = await this.usersService.deleteById(user.id);
     return { data };
   }
 }

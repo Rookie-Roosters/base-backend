@@ -1,23 +1,28 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsInt, IsNumber, IsPositive, IsString } from 'class-validator';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsEmail, IsString, IsBoolean } from 'class-validator';
+import { Column, OneToOne, JoinColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+
+import { Authentication } from '@authentication/entities';
 
 @Entity()
 export class User {
+  @ApiPropertyOptional({ description: 'User unique identifier' })
   @PrimaryGeneratedColumn()
-  @ApiProperty()
-  @IsInt()
-  @IsPositive()
-  id: number;
+  id?: number;
 
+  @ApiProperty({ description: "User's email address" })
+  @IsEmail()
   @Column()
-  @ApiProperty()
+  email: string;
+
+  @ApiProperty({ description: "User's first name" })
   @IsString()
+  @Column()
   firstName: string;
 
-  @Column()
-  @ApiProperty()
+  @ApiProperty({ description: "User's last name" })
   @IsString()
+  @Column()
   lastName: string;
 
   @Column({ default: true })
@@ -28,4 +33,11 @@ export class User {
   @ApiProperty({type: [String], description: "User's socket connections"})
   @IsString()
   sockets: string[];
+  @OneToOne(() => Authentication)
+  @JoinColumn()
+  authentication?: Authentication;
+
+  get fullName(): string {
+    return `${this.firstName} ${this.lastName}`;
+  }
 }

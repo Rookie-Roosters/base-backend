@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { EnvironmentService } from '@core/services';
 import { AppModule } from './app.module';
 import helmet from 'helmet';
+import { AuthenticationService } from '@authentication/services';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -26,7 +27,9 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, document);
 
   await app.listen(environment.get('PORT'));
-
   console.log(`Server ready at ${await app.getUrl()}`);
+
+  const authService = app.get(AuthenticationService);
+  authService.syncAuthRoles();
 }
 bootstrap();

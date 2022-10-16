@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Branch } from './branch.entity';
 
 @Entity()
 export class Company {
@@ -16,6 +17,9 @@ export class Company {
 
   @Column()
   icon?: string;
+
+  @OneToMany(() => Branch, (branch) => branch.company)
+  branches: Branch[];
 
   //   @ApiProperty({ description: 'Every user who belongs to the company' })
   //   @OneToMany(() => User)

@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { EnvironmentService } from '@core/services';
 import { AuthenticationService } from './services';
-import { Authentication } from './entities';
+import { Authentication, Role } from './entities';
 import { JwtAuthStrategy, LocalAuthStrategy } from './strategies';
+import { RolesGuard } from './guards';
 
 @Module({
   imports: [
@@ -18,7 +20,7 @@ import { JwtAuthStrategy, LocalAuthStrategy } from './strategies';
         signOptions: { expiresIn: environmentService.get('JWT_EXPIRATION_TIME') },
       }),
     }),
-    TypeOrmModule.forFeature([Authentication]),
+    TypeOrmModule.forFeature([Authentication, Role]),
   ],
   providers: [AuthenticationService, LocalAuthStrategy, JwtAuthStrategy],
   exports: [AuthenticationService],

@@ -27,7 +27,7 @@ export class UsersService {
   }
 
   async findOne(options: FindOneOptions<User>): Promise<User> {
-    const user = this.usersRepository.findOne(options);
+    const user = await this.usersRepository.findOne(options);
     if (!user) throw new NotFoundException('User not found');
     return user;
   }

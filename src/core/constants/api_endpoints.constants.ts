@@ -18,6 +18,10 @@ export const API_ENDPOINTS = {
       SIGN_UP: 'sign-up',
     },
   },
+  COMPANIES: {
+    BASE_PATH: 'companies',
+    BY_ID: API_PARAMS.BY_ID,
+  },
   CHATS: {
     BASE_PATH: 'chats',
     BY_ID: API_PARAMS.BY_ID,

@@ -8,12 +8,14 @@ import { UsersService } from '@users/services';
 import { UserCreateDto, UserUpdateDto } from '@users/dto';
 import { CurrentAuth } from '@authentication/decorators';
 import { UseSessionGuard } from '@users/decorators';
+import { ALL_ROLES, ALL_ROLES_EXCEPT, AuthRole } from '@authentication/constants';
 
 @ApiController(API_ENDPOINTS.USERS.BASE_PATH)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @ApiPost({
+    roles: ALL_ROLES_EXCEPT(AuthRole.REGULAR),
     summary: 'Create a new `User`',
     description: 'Stores a new `User` record into the database',
     responseDescription: 'A model containing the newly created `User` information',
@@ -25,6 +27,7 @@ export class UsersController {
   }
 
   @ApiGet({
+    roles: ALL_ROLES_EXCEPT(AuthRole.REGULAR),
     summary: 'Get all `Users`',
     description: 'Retrieves a list containing every `User` record in the database',
     responseDescription: 'A list of models containing the information of every `User` in the database',
@@ -39,6 +42,7 @@ export class UsersController {
 
   @ApiGet({
     path: API_ENDPOINTS.USERS.BY_ID,
+    roles: ALL_ROLES,
     summary: 'Get a `User` by Id',
     description: 'Retrieves an `User` record that matches the Id',
     responseDescription: 'A model containing the information of the matched `User`',
@@ -52,6 +56,7 @@ export class UsersController {
 
   @ApiPatch({
     path: API_ENDPOINTS.USERS.BY_ID,
+    roles: [AuthRole.MANAGER, AuthRole.OWNER],
     summary: 'Update an `User` by Id',
     description: 'Updates an `User` record that matches the Id',
     responseDescription: 'A model containing the updated information of the matched `User`',
@@ -65,6 +70,7 @@ export class UsersController {
 
   @ApiDelete({
     path: API_ENDPOINTS.USERS.BY_ID,
+    roles: [AuthRole.MANAGER, AuthRole.OWNER],
     summary: 'Delete an `User` by Id',
     description: 'Deletes an `User` record that matches the Id',
     responseDescription: 'A model containing the information of the deleted `User`',

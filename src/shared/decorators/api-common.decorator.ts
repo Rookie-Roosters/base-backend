@@ -1,8 +1,23 @@
-import { applyDecorators, Controller, Delete, Get, HttpCode, HttpStatus, Patch, Post, Put } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  applyDecorators,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Patch,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { startCase } from 'lodash';
 
 import { API_RESPONSES, API_VERSIONS } from '@core/constants';
+import { UseSessionGuard } from '@users/decorators';
+import { Roles } from '@authentication/decorators';
+import { AuthRole } from '@authentication/constants';
+import { JwtAuthGuard, RolesGuard } from '@authentication/guards';
 
 export function ApiController(name: string, params?: { version?: string; apiTag?: string }): ClassDecorator {
   const version = params?.version ?? API_VERSIONS.V1;
@@ -18,7 +33,7 @@ export function ApiController(name: string, params?: { version?: string; apiTag?
 
 interface ApiMethodParams {
   path?: string;
-  roles?: string[];
+  roles?: AuthRole[];
   summary?: string;
   description?: string;
   responseType?: any;
@@ -27,7 +42,7 @@ interface ApiMethodParams {
 
 function ApiMethod(params?: ApiMethodParams): MethodDecorator {
   const roles = params?.roles ? '[' + params.roles.map((e) => startCase(e)).join('/') + '] ' : '';
-  return applyDecorators(
+  const decorators = [
     ApiOperation({
       summary: roles + (params?.summary ?? ''),
       description: params?.description,
@@ -37,7 +52,11 @@ function ApiMethod(params?: ApiMethodParams): MethodDecorator {
       description: params?.responseDescription,
     }),
     ApiResponse(API_RESPONSES.COMMON_ERROR),
-  );
+    ...(params?.roles
+      ? [ApiBearerAuth(), UseGuards(JwtAuthGuard, RolesGuard), Roles(...params.roles), UseSessionGuard()]
+      : []),
+  ];
+  return applyDecorators(...decorators);
 }
 
 export function ApiPost(params?: ApiMethodParams): MethodDecorator {

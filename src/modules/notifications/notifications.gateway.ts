@@ -32,7 +32,8 @@ export class NotificationsGateway implements OnGatewayDisconnect, OnGatewayInit,
   }
 
   async send(@CurrentAuth() currentAuth: User, text: string, link: string) {
-    const notification = await this.notificationsService.save(text,link,currentAuth);
+    //const notification = await this.notificationsService.save(text,link,currentAuth);
+    const notification = {text:text, link:link, date:Date.now()};
     const sockets = await this.socketsService.getSockets(currentAuth.id);
     const serverSockets = await this.server.fetchSockets();
     sockets.map((socket) => {
@@ -43,7 +44,7 @@ export class NotificationsGateway implements OnGatewayDisconnect, OnGatewayInit,
       }
     })
   }
-
+/*
   @SubscribeMessage('findAllNotifications')
   async findAll(@CurrentAuth() currentAuth: User, client: Socket, ...args: any[]) {
     await this.notificationsService.findByUser(currentAuth.id).then((notifications)=>{
@@ -57,8 +58,8 @@ export class NotificationsGateway implements OnGatewayDisconnect, OnGatewayInit,
     return this.notificationsService.update(updateNotificationDto.id, updateNotificationDto);
   }
 
-  //@SubscribeMessage('updateAllNotifications')
-  //remove(@MessageBody() id: number) {
-  //  return this.notificationsService.updateAll();
-  //}
+  @SubscribeMessage('updateAllNotifications')
+  remove(@MessageBody() id: number) {
+    return this.notificationsService.updateAll();
+  }*/
 }

@@ -8,7 +8,7 @@ import { Notification } from './entities/notification.entity';
 
 @Injectable()
 export class NotificationsService{
-  constructor(
+  /*constructor(
     @InjectRepository(Notification)
     private readonly notificationsRepository: Repository<Notification>,
     private readonly usersRepository: Repository<User>,
@@ -36,5 +36,5 @@ export class NotificationsService{
 
   async updateAllByUser(userId: number) {
     //await this.notificationsRepository.update({user:userId}, { isAlreadySeen: true })
-  }
+  }*/
 }

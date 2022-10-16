@@ -58,13 +58,15 @@ export class AutomationCommonService {
 
   async exec(block: any, company: number) {
     const attributes = Object.getOwnPropertyNames(this);
-    for (let attribute of attributes) if (this[attribute].type == block.type) return await this[attribute].exec(block, company);
+    for (let attribute of attributes)
+      if (this[attribute].type == block.type) return await this[attribute].exec(block, company);
     throw new ForbiddenException(`Attribute not found in common.exec`);
   }
 
   async save(block: any, automation: AutomationEntity) {
     const attributes = Object.getOwnPropertyNames(this);
-    for (let attribute of attributes) if (this[attribute].type == block.type) return await this[attribute].save(block, automation);
+    for (let attribute of attributes)
+      if (this[attribute].type == block.type) return await this[attribute].save(block, automation);
     throw new ForbiddenException(`Attribute not found in common.save`);
   }
 

@@ -1,4 +1,4 @@
-import { AutomationEntity } from "@automation/entities/automation.entity";
+import { AutomationEntity } from '@automation/entities/automation.entity';
 
 export abstract class AutomationCommonClass<C> {
   public readonly type: string;

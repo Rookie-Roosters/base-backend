@@ -7,11 +7,8 @@
     "**/.DS_Store": true,
     "**/Thumbs.db": true,
     "node_modules": true,
-    "dist": true,
     ".eslintrc.js": true,
     ".prettierrc": true,
-    "package-lock.json": true,
-    "tsconfig.build.json": true,
     ".vscode": true
   },
   "hide-files.files": []

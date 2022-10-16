@@ -1,9 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
+import to from 'await-to-js';
 
 import { User } from '@users/entities';
 import { UserCreateDto, UserUpdateDto } from '@users/dto';
+import { Authentication } from '@authentication/entities';
 
 @Injectable()
 export class UsersService {
@@ -12,18 +14,20 @@ export class UsersService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  async create(dto: UserCreateDto): Promise<User> {
-    const user = this.usersRepository.create(dto);
+  async create(dto: UserCreateDto, authentication?: Authentication): Promise<User> {
+    const user = this.usersRepository.create({ ...dto, authentication });
+    const [err] = await to(this.usersRepository.save(user));
+    if (err) throw new ForbiddenException(err.name, err.message);
     return user;
   }
 
-  async findAll(): Promise<User[]> {
-    const users = this.usersRepository.find();
+  async find(options?: FindManyOptions<User>): Promise<User[]> {
+    const users = this.usersRepository.find(options);
     return users;
   }
 
-  async findById(id: number): Promise<User> {
-    const user = await this.usersRepository.findOneBy({ id });
+  async findOne(options: FindOneOptions<User>): Promise<User> {
+    const user = await this.usersRepository.findOne(options);
     if (!user) throw new NotFoundException('User not found');
     return user;
   }

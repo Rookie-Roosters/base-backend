@@ -1,14 +1,14 @@
 import { Automation } from '@automation/blocks/automation';
 import { AutomationResponseDto } from '@automation/dtos/automation-response.dto';
 import { AutomationService } from '@automation/services/automation.service';
-import { API_ENDPOINTS, API_VERSIONS, HttpResponse } from '@core/constants';
+import { API_ENDPOINTS, IHttpResponse } from '@core/constants';
 import { ValidateIdPipe } from '@core/pipes/validate-id.pipe';
-import { Delete, Body, Param } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiParam } from '@nestjs/swagger';
+import { Body, Param } from '@nestjs/common';
+import { ApiBody, ApiParam } from '@nestjs/swagger';
 import { ApiController, ApiDelete, ApiGet, ApiPatch, ApiPost } from '@shared/decorators';
 import { DeleteResult } from 'typeorm';
 
-@ApiController(API_ENDPOINTS.AUTOMATION.BASE_PATH, API_VERSIONS.V1)
+@ApiController(API_ENDPOINTS.AUTOMATION.BASE_PATH)
 export class AutomationController {
   constructor(private readonly automationService: AutomationService) {}
 
@@ -19,7 +19,7 @@ export class AutomationController {
     responseDescription: 'The result of the executed `Automation`',
   })
   @ApiBody({ type: Object })
-  async rawExecute(@Body() automation: Automation): Promise<HttpResponse<any>> {
+  async rawExecute(@Body() automation: Automation): Promise<IHttpResponse<any>> {
     return {
       data: await this.automationService.rawExecute(automation),
     };
@@ -36,7 +36,7 @@ export class AutomationController {
   async execute(
     @Param(API_ENDPOINTS.AUTOMATION.BY_COMPANY_ID, ValidateIdPipe) company: number,
     @Param(API_ENDPOINTS.AUTOMATION.BY_ID) id: number,
-  ): Promise<HttpResponse<any>> {
+  ): Promise<IHttpResponse<any>> {
     return {
       data: await this.automationService.execute(company, id),
     };
@@ -54,7 +54,7 @@ export class AutomationController {
   async saveDraft(
     @Body() automation: Automation,
     @Param(API_ENDPOINTS.AUTOMATION.BY_COMPANY_ID, ValidateIdPipe) company: number,
-  ): Promise<HttpResponse<AutomationResponseDto>> {
+  ): Promise<IHttpResponse<AutomationResponseDto>> {
     return {
       data: await this.automationService.saveDraft(automation, company),
     };
@@ -72,7 +72,7 @@ export class AutomationController {
   async create(
     @Body() automation: Automation,
     @Param(API_ENDPOINTS.AUTOMATION.BY_COMPANY_ID, ValidateIdPipe) company: number,
-  ): Promise<HttpResponse<AutomationResponseDto>> {
+  ): Promise<IHttpResponse<AutomationResponseDto>> {
     return {
       data: await this.automationService.create(automation, company),
     };
@@ -88,7 +88,7 @@ export class AutomationController {
   @ApiParam({ name: API_ENDPOINTS.AUTOMATION.BY_COMPANY_ID, type: Number, description: "Company's Id" })
   async findAll(
     @Param(API_ENDPOINTS.AUTOMATION.BY_COMPANY_ID, ValidateIdPipe) company: number,
-  ): Promise<HttpResponse<AutomationResponseDto[]>> {
+  ): Promise<IHttpResponse<AutomationResponseDto[]>> {
     return {
       data: await this.automationService.findAll(company),
     };
@@ -106,7 +106,7 @@ export class AutomationController {
   async findOne(
     @Param(API_ENDPOINTS.AUTOMATION.BY_COMPANY_ID, ValidateIdPipe) company: number,
     @Param(API_ENDPOINTS.AUTOMATION.BY_ID) id: number,
-  ): Promise<HttpResponse<AutomationResponseDto>> {
+  ): Promise<IHttpResponse<AutomationResponseDto>> {
     return {
       data: await this.automationService.findOne(company, id),
     };
@@ -126,7 +126,7 @@ export class AutomationController {
     @Param(API_ENDPOINTS.AUTOMATION.BY_COMPANY_ID, ValidateIdPipe) company: number,
     @Param(API_ENDPOINTS.AUTOMATION.BY_ID) id: number,
     @Body() automation: Automation,
-  ): Promise<HttpResponse<AutomationResponseDto>> {
+  ): Promise<IHttpResponse<AutomationResponseDto>> {
     return {
       data: await this.automationService.updateAutomation(company, id, automation),
     };
@@ -143,7 +143,7 @@ export class AutomationController {
   async delete(
     @Param(API_ENDPOINTS.AUTOMATION.BY_COMPANY_ID, ValidateIdPipe) company: number,
     @Param(API_ENDPOINTS.AUTOMATION.BY_ID) id: number,
-  ): Promise<HttpResponse<DeleteResult>> {
+  ): Promise<IHttpResponse<DeleteResult>> {
     return {
       data: await this.automationService.delete(company, id),
     };

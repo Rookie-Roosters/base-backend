@@ -1,12 +1,12 @@
-import { Answer } from '@chatbotentities/answer.entity';
-import { Question } from '@chatbotentities/question.entity';
-import { Topic } from '@chatbotentities/topic';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import * as fs from 'fs';
-import { AnswerDto, QuestionDto, RequestTopicDto, ResponseTopicDto } from '@chatbotdtos';
-const { NlpManager } = require('node-nlp');
+
+import { Topic, Question, Answer } from '@chatbot/entities';
+import { ResponseTopicDto, AnswerDto, RequestTopicDto, QuestionDto } from '@chatbot/dtos';
+
+import { NlpManager } from 'node-nlp'; //require('node-nlp');
 
 @Injectable()
 export class ChatbotService {

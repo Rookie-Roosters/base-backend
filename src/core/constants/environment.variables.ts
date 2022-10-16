@@ -15,6 +15,12 @@ export class EnvironmentVariables {
   @IsNumber()
   PORT: number;
 
+  // JWT OPTIONS
+  @IsString()
+  JWT_SECRET: string;
+  @IsString()
+  JWT_EXPIRATION_TIME: string;
+
   // BASE API
   @IsAlphanumeric()
   BASE_API_KEY: string;

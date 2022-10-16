@@ -1,36 +1,35 @@
-import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { EnvironmentService } from '@core/services';
 import { AppModule } from './app.module';
+import helmet from 'helmet';
+import { AuthenticationService } from '@authentication/services';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const environment = app.get(EnvironmentService);
+  const version = environment.get('VERSION');
 
+  app.use(helmet());
   app.enableCors();
   app.setGlobalPrefix('api');
-  app.enableVersioning({ type: VersioningType.URI, defaultVersion: process.env.VERSION });
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      transform: true,
-      transformOptions: {
-        enableImplicitConversion: true,
-      },
-    }),
-  );
+  app.enableVersioning({ type: VersioningType.URI, defaultVersion: version.toString() });
 
   const config = new DocumentBuilder()
     .setTitle('BASE Hackathon - Backend')
-    .setDescription('API methods and schemas documentation ')
-    .setVersion('1.0')
+    .setDescription('API methods and schemas documentation')
+    .setVersion(version.toFixed(1))
     .addBearerAuth()
     .setExternalDoc('Postman Collection', '/docs-json')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
 
-  await app.listen(process.env.PORT || 3000);
-
+  await app.listen(environment.get('PORT'));
   console.log(`Server ready at ${await app.getUrl()}`);
+
+  const authService = app.get(AuthenticationService);
+  authService.syncAuthRoles();
 }
 bootstrap();

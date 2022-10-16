@@ -12,6 +12,15 @@ export const API_ENDPOINTS = {
   USERS: {
     BASE_PATH: 'users',
     BY_ID: API_PARAMS.BY_ID,
+    SESSION: {
+      BASE_PATH: 'session',
+      LOG_IN: 'log-in',
+      SIGN_UP: 'sign-up',
+    },
+  },
+  COMPANIES: {
+    BASE_PATH: 'companies',
+    BY_ID: API_PARAMS.BY_ID,
   },
   CHATS: {
     BASE_PATH: 'chats',
@@ -32,5 +41,5 @@ export const API_ENDPOINTS = {
     BY_ID: 'id',
     EXECUTE: 'execute',
     DRAFT: 'draft',
-  }
+  },
 };

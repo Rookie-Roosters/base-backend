@@ -1,15 +1,17 @@
-import { AnswerDto, QuestionDto, RequestTopicDto, ResponseTopicDto } from '@chatbotdtos';
-import { ValidateQuestionPipe } from '@chatbotpipes/validate-question.pipe';
-import { ChatbotService } from '@chatbotservices/chatbot.service';
-import { API_ENDPOINTS, API_VERSIONS, HttpResponse } from '@core/constants';
-import { ValidateIdPipe } from '@core/pipes/validate-id.pipe';
 import { Body, Param, Query } from '@nestjs/common';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { ApiController, ApiDelete, ApiGet, ApiPatch, ApiPost } from '@shared/decorators';
 import { DeleteResult } from 'typeorm';
 
+import { API_ENDPOINTS, IHttpResponse } from '@core/constants';
+import { AnswerDto, QuestionDto, RequestTopicDto, ResponseTopicDto } from '@chatbot/dtos';
+import { ValidateQuestionPipe } from '@chatbot/pipes';
+import { ChatbotService } from '@chatbot/services';
+import { ApiController, ApiDelete, ApiGet, ApiPatch, ApiPost } from '@shared/decorators';
+
+import { ValidateIdPipe } from '@core/pipes/validate-id.pipe';
+
 @ApiTags('Chatbot')
-@ApiController(API_ENDPOINTS.CHATBOT.BASE_PATH, API_VERSIONS.V1)
+@ApiController(API_ENDPOINTS.CHATBOT.BASE_PATH)
 export class ChatbotController {
   constructor(private readonly chatbotService: ChatbotService) {}
 
@@ -18,7 +20,7 @@ export class ChatbotController {
     summary: 'Train the `Chatbot`',
     description: 'Trains the `Chatbot` with the new topics, questions or answers',
   })
-  async train(): Promise<HttpResponse<void>> {
+  async train(): Promise<IHttpResponse<void>> {
     await this.chatbotService.train();
     return {};
   }
@@ -31,7 +33,7 @@ export class ChatbotController {
     responseType: ResponseTopicDto,
   })
   @ApiBody({ type: RequestTopicDto, description: 'The topic to create' })
-  async createTopic(@Body() topic: RequestTopicDto): Promise<HttpResponse<ResponseTopicDto>> {
+  async createTopic(@Body() topic: RequestTopicDto): Promise<IHttpResponse<ResponseTopicDto>> {
     return {
       data: await this.chatbotService.createTopic(topic),
     };
@@ -44,7 +46,7 @@ export class ChatbotController {
     responseDescription: '`Chatbot` topics',
     responseType: [ResponseTopicDto],
   })
-  async findAll(): Promise<HttpResponse<ResponseTopicDto[]>> {
+  async findAll(): Promise<IHttpResponse<ResponseTopicDto[]>> {
     return {
       data: await this.chatbotService.findAll(),
     };
@@ -57,7 +59,7 @@ export class ChatbotController {
     responseType: DeleteResult,
   })
   @ApiParam({ name: API_ENDPOINTS.CHATBOT.BY_ID, description: 'id of the topic' })
-  async delete(@Param(API_ENDPOINTS.CHATBOT.BY_ID, ValidateIdPipe) id: number): Promise<HttpResponse<DeleteResult>> {
+  async delete(@Param(API_ENDPOINTS.CHATBOT.BY_ID, ValidateIdPipe) id: number): Promise<IHttpResponse<DeleteResult>> {
     return {
       data: await this.chatbotService.delete(id),
     };
@@ -75,7 +77,7 @@ export class ChatbotController {
   async addQuestion(
     @Param(API_ENDPOINTS.CHATBOT.BY_ID, ValidateIdPipe) id: number,
     @Body() questionDto: QuestionDto,
-  ): Promise<HttpResponse<ResponseTopicDto>> {
+  ): Promise<IHttpResponse<ResponseTopicDto>> {
     return {
       data: await this.chatbotService.addQuestion(id, questionDto),
     };
@@ -96,7 +98,7 @@ export class ChatbotController {
   async deleteQuestion(
     @Param(API_ENDPOINTS.CHATBOT.BY_ID, ValidateIdPipe) id: number,
     @Body() questionDto: QuestionDto,
-  ): Promise<HttpResponse<ResponseTopicDto>> {
+  ): Promise<IHttpResponse<ResponseTopicDto>> {
     return {
       data: await this.chatbotService.deleteQuestion(id, questionDto),
     };
@@ -114,7 +116,7 @@ export class ChatbotController {
   async addAnswer(
     @Param(API_ENDPOINTS.CHATBOT.BY_ID, ValidateIdPipe) id: number,
     @Body() answerDto: AnswerDto,
-  ): Promise<HttpResponse<ResponseTopicDto>> {
+  ): Promise<IHttpResponse<ResponseTopicDto>> {
     return {
       data: await this.chatbotService.addAnswer(id, answerDto),
     };
@@ -135,7 +137,7 @@ export class ChatbotController {
   async deleteAnswer(
     @Param(API_ENDPOINTS.CHATBOT.BY_ID, ValidateIdPipe) id: number,
     @Body() answerDto: AnswerDto,
-  ): Promise<HttpResponse<ResponseTopicDto>> {
+  ): Promise<IHttpResponse<ResponseTopicDto>> {
     return {
       data: await this.chatbotService.deleteAnswer(id, answerDto),
     };
@@ -152,7 +154,7 @@ export class ChatbotController {
     type: String,
     description: 'The question to ask to the `Chatbot`',
   })
-  async Chatbot(@Query('question', ValidateQuestionPipe) question: string): Promise<HttpResponse<AnswerDto>> {
+  async Chatbot(@Query('question', ValidateQuestionPipe) question: string): Promise<IHttpResponse<AnswerDto>> {
     return {
       data: await this.chatbotService.chatbot(question),
     };

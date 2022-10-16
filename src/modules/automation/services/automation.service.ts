@@ -7,12 +7,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { AutomationEntity } from '@automation/entities/automation.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { AutomationResponseDto } from '@automation/dtos/automation-response.dto';
+import { CompaniesService } from '@companies/services';
 
 @Injectable()
 export class AutomationService {
   constructor(
     @InjectRepository(AutomationEntity) private automationRepository: Repository<AutomationEntity>,
     private automationCommonService: AutomationCommonService,
+    private companiesService: CompaniesService,
   ) {}
 
   private async exec(block: any, company?: number) {
@@ -24,11 +26,11 @@ export class AutomationService {
   }
 
   private async findRawOne(company: number, id: number) {
-    //Validate if the company exists
+    const foundCompany = await this.companiesService.findOne({ where: { id: company } });
     const automation = await this.automationRepository.findOne({
       where: {
         id,
-        company,
+        company: foundCompany,
       },
     });
     if (automation) return automation;
@@ -57,6 +59,7 @@ export class AutomationService {
   }
 
   async saveDraft(automation: Automation, company: number): Promise<AutomationResponseDto> {
+    const foundCompany = await this.companiesService.findOne({ where: { id: company } });
     const filename = Array(32)
       .fill(null)
       .map(() => Math.round(Math.random() * 16).toString(16))
@@ -64,7 +67,7 @@ export class AutomationService {
     this.createFile(filename, automation);
     const createdAutomation = await this.automationRepository.save({
       filename,
-      company,
+      company: foundCompany,
       draft: true,
     });
     return {
@@ -76,7 +79,7 @@ export class AutomationService {
   }
 
   async create(automation: Automation, company: number): Promise<AutomationResponseDto> {
-    //Check if a company exists
+    const foundCompany = await this.companiesService.findOne({ where: { id: company } });
     const filename = Array(32)
       .fill(null)
       .map(() => Math.round(Math.random() * 16).toString(16))
@@ -84,7 +87,7 @@ export class AutomationService {
     this.createFile(filename, automation);
     const createdAutomation = await this.automationRepository.save({
       filename,
-      company,
+      company: foundCompany,
     });
     try {
       await this.save(automation.output, createdAutomation);
@@ -101,10 +104,10 @@ export class AutomationService {
   }
 
   async findAll(company: number): Promise<AutomationResponseDto[]> {
-    //Validate if the company exists
+    const foundCompany = await this.companiesService.findOne({ where: { id: company } });
     const automations = await this.automationRepository.find({
       where: {
-        company,
+        company: foundCompany,
       },
     });
     return await Promise.all(
@@ -123,11 +126,11 @@ export class AutomationService {
   }
 
   async findOne(company: number, id: number): Promise<AutomationResponseDto> {
-    //Validate if the company exits
+    const foundCompany = await this.companiesService.findOne({ where: { id: company } });
     const automation = await this.automationRepository.findOne({
       where: {
         id,
-        company,
+        company: foundCompany,
       },
     });
     if (automation) {

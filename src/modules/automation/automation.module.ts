@@ -1,3 +1,4 @@
+import { CompaniesModule } from '@companies/companies.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AutomationController } from './controllers/automation.controller';
@@ -31,6 +32,7 @@ import { AutomationOutputVariableService } from './services/outputs';
       AutomationOutputVariableActionEntity,
       AutomationInputVariableEntity,
     ]),
+    CompaniesModule,
   ],
   controllers: [AutomationController],
   providers: [

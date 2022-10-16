@@ -9,6 +9,7 @@ import { AutomationInputVariableEntity } from '@automation/entities/inputs/input
 import * as fs from 'fs';
 import { STORAGE_PATHS } from '@core/constants/storage_paths.constant';
 import { AutomationCommonService } from '../common/common.service';
+import { CompaniesService } from '@companies/services';
 
 @Injectable()
 export class AutomationInputVariableService implements AutomationCommonClass<AutomationInputVariable> {
@@ -18,6 +19,7 @@ export class AutomationInputVariableService implements AutomationCommonClass<Aut
     private automationOutputVariablesRepository: Repository<AutomationOutputVariableEntity>,
     @InjectRepository(AutomationInputVariableEntity)
     private automationInputVariablesRepository: Repository<AutomationInputVariableEntity>,
+    private companiesService: CompaniesService,
   ) {}
 
   public type: string = 'inputVariable';
@@ -26,7 +28,9 @@ export class AutomationInputVariableService implements AutomationCommonClass<Aut
     const outputVariable = await this.automationOutputVariablesRepository.findOne({
       where: {
         automation: {
-          company,
+          company: {
+            id: company,
+          },
         },
         name: block.name,
       },
@@ -69,7 +73,9 @@ export class AutomationInputVariableService implements AutomationCommonClass<Aut
     const outputVariable = await this.automationOutputVariablesRepository.findOne({
       where: {
         automation: {
-          company,
+          company: {
+            id: company,
+          },
         },
         name: block.name,
       },

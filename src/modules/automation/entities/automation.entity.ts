@@ -1,5 +1,7 @@
+import { Company } from '@companies/entities';
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { AutomationOutputVariableActionEntity } from './output';
 
 @Entity('automation')
 export class AutomationEntity {
@@ -7,9 +9,9 @@ export class AutomationEntity {
   @PrimaryGeneratedColumn()
   id?: number;
 
-  @ApiProperty({ type: Number, description: 'Automation company' })
-  @Column({ type: Number })
-  company: number; //Change this when we hava a company entity
+  @ApiProperty({type: Company})
+  @ManyToOne(() => Company, (company) => company.id, {onDelete: 'CASCADE'})
+  company: Company; //Change this when we hava a company entity
 
   @ApiProperty({ type: String, description: 'Automation json filename' })
   @Column({ type: String, length: 64 })

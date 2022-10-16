@@ -1,4 +1,12 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit } from '@nestjs/websockets';
+import {
+  WebSocketGateway,
+  SubscribeMessage,
+  MessageBody,
+  WebSocketServer,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+  OnGatewayInit,
+} from '@nestjs/websockets';
 import { NotificationsService } from './notifications.service';
 import { SendNotificationDto } from './dto/send-notification.dto';
 import { UpdateNotificationDto } from './dto/update-notification.dto';
@@ -8,13 +16,12 @@ import { SocketsService } from '@users/services';
 import { CurrentAuth } from '@authentication/decorators';
 import { User } from '@users/entities';
 
-@WebSocketGateway(3000, { cors: { origin: '*' } })
+@WebSocketGateway({ cors: { origin: '*' } })
 export class NotificationsGateway implements OnGatewayDisconnect, OnGatewayInit, OnGatewayConnection {
   @WebSocketServer()
-  server:Server;
+  server: Server;
 
-  constructor(private readonly notificationsService: NotificationsService,
-    private socketsService: SocketsService) {}
+  constructor(private readonly notificationsService: NotificationsService, private socketsService: SocketsService) {}
 
   afterInit(server: Server) {
     console.log('Notification socket connected');
@@ -33,18 +40,18 @@ export class NotificationsGateway implements OnGatewayDisconnect, OnGatewayInit,
 
   async send(@CurrentAuth() currentAuth: User, text: string, link: string) {
     //const notification = await this.notificationsService.save(text,link,currentAuth);
-    const notification = {text:text, link:link, date:Date.now()};
+    const notification = { text: text, link: link, date: Date.now() };
     const sockets = await this.socketsService.getSockets(currentAuth.id);
     const serverSockets = await this.server.fetchSockets();
     sockets.map((socket) => {
-      if(serverSockets.findIndex((serverSockets) => serverSockets.id == socket.socketId) == -1) {
+      if (serverSockets.findIndex((serverSockets) => serverSockets.id == socket.socketId) == -1) {
         this.socketsService.deleteSocketConnection(socket.socketId);
       } else {
         this.server.to(socket.socketId).emit('notify', notification);
       }
-    })
+    });
   }
-/*
+  /*
   @SubscribeMessage('findAllNotifications')
   async findAll(@CurrentAuth() currentAuth: User, client: Socket, ...args: any[]) {
     await this.notificationsService.findByUser(currentAuth.id).then((notifications)=>{

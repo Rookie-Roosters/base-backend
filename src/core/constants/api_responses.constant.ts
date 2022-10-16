@@ -57,8 +57,8 @@ export const API_RESPONSES = {
         data: {
           type: 'object',
           properties: {
-            acknowledged: { type: 'boolean' },
-            deletedCount: { type: 'number' },
+            raw: { type: 'object' },
+            affected: { type: 'number' },
           },
         },
       },

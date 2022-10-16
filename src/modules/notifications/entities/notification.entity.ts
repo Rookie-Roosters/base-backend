@@ -4,7 +4,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Notification {
-    /*
+  /*
     @ApiProperty({ description: "The notification's primary key" })
     @PrimaryGeneratedColumn()
     id: number;

@@ -28,8 +28,11 @@
 
       // Modules
       "@users/*": ["src/modules/users/*"],
+      "@companies/*": ["src/modules/companies/*"],
       "@chatbot*": ["src/modules/chatbot/*"],
-      "@chats/*": ["src/modules/chats/*"]
+      "@chats/*": ["src/modules/chats/*"],
+      "@automation/*": ["src/modules/automation/*"],
+      "@notifications/*": ["src/modules/notifications/*"],
     }
   }
 }

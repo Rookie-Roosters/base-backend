@@ -1,2 +1,2 @@
+export * from './socket.entity';
 export * from './user.entity';
-export * from "./socket.entity"

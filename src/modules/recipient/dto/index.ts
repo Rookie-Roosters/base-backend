@@ -1,1 +1,0 @@
-export * from './response-get-recipients-authorized.dto'

@@ -1,11 +1,14 @@
-import { CoreModule } from '@core/core.module';
 import { Module } from '@nestjs/common';
+
+import { CoreModule } from '@core/core.module';
 import { UsersModule } from '@users/users.module';
-import { EventsModule } from './modules/events/events.module';
-import { NotificationsModule } from './modules/notifications/notifications.module';
+import { CompaniesModule } from '@companies/companies.module';
+import { ChatbotModule } from '@chatbot/chatbot.module';
+import { AutomationModule } from '@automation/automation.module';
+import { NotificationsModule } from '@notifications/notifications.module';
 
 @Module({
-  imports: [CoreModule, UsersModule, EventsModule, NotificationsModule],
+  imports: [CoreModule, UsersModule, CompaniesModule, ChatbotModule, AutomationModule, NotificationsModule],
   controllers: [],
   providers: [],
 })

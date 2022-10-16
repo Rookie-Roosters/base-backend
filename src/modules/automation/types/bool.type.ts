@@ -1,4 +1,14 @@
-import { AutomationConditionalIfInterface } from "../interfaces/conditionals/conditional-if.interface";
-import { AutomationInputConstantInterface } from "../interfaces/inputs/input-constant.interface";
+import { AutomationInputVariable } from '@automation/blocks';
+import { AutomationConditionalAnd } from '@automation/blocks/conditionals/conditional-and';
+import { AutomationConditionalIf } from '@automation/blocks/conditionals/conditional-if';
+import { AutomationConditionalNot } from '@automation/blocks/conditionals/conditional-not';
+import { AutomationConditionalOr } from '@automation/blocks/conditionals/conditional-or';
+import { AutomationInputConstant } from '@automation/blocks/inputs/input-constant';
 
-export type AutomationBoolTypes = AutomationInputConstantInterface | AutomationConditionalIfInterface;
+export type AutomationBoolTypes =
+  | AutomationInputConstant
+  | AutomationConditionalIf
+  | AutomationConditionalAnd
+  | AutomationConditionalOr
+  | AutomationConditionalNot
+  | AutomationInputVariable;

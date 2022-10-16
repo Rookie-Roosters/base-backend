@@ -1,14 +1,15 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEmail, IsString, IsBoolean } from 'class-validator';
-import { Column, OneToOne, JoinColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsString } from 'class-validator';
+import { Column, OneToOne, JoinColumn, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
 import { Authentication } from '@authentication/entities';
+import { Branch } from '@companies/entities';
 
 @Entity()
 export class User {
-  @ApiPropertyOptional({ description: 'User unique identifier' })
+  @ApiProperty({ description: 'User unique identifier' })
   @PrimaryGeneratedColumn()
-  id?: number;
+  id: number;
 
   @ApiProperty({ description: "User's email address" })
   @IsEmail()
@@ -25,11 +26,10 @@ export class User {
   @Column()
   lastName: string;
 
-  @Column({ default: true })
-  @ApiProperty()
-  @IsBoolean()
-  isActive: boolean;
-  
+  @ApiProperty({ description: 'Branch office where the employee is working on' })
+  @ManyToOne(() => Branch, (branch) => branch.employees)
+  branch: Branch;
+
   @OneToOne(() => Authentication)
   @JoinColumn()
   authentication?: Authentication;

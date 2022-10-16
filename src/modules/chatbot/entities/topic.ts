@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('topics')
+@Entity()
 export class Topic {
   @ApiProperty({ type: Number, description: 'Chatbot topic id' })
   @PrimaryGeneratedColumn()

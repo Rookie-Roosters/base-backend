@@ -14,6 +14,8 @@ export class EnvironmentVariables {
   VERSION: number;
   @IsNumber()
   PORT: number;
+  @IsNumber()
+  SOCKETS_PORT: number;
 
   // JWT OPTIONS
   @IsString()

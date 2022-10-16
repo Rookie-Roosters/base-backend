@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Topic } from './topic';
 
-@Entity('answers')
+@Entity()
 export class Answer {
   @ApiProperty({ type: Number, description: "Answer's id" })
   @PrimaryGeneratedColumn()

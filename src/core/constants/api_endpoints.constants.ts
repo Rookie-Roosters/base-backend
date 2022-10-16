@@ -29,9 +29,17 @@ export const API_ENDPOINTS = {
   },
   CHATBOT: {
     BASE_PATH: 'chatbot',
-    BY_ID: API_PARAMS.BY_ID,
+    BY_ID: 'id',
+    TOPICS: 'topics',
     QUESTION: 'question',
     ANSWER: 'answer',
     TRAIN: 'train',
+  },
+  AUTOMATION: {
+    BASE_PATH: 'automation',
+    BY_COMPANY_ID: 'company',
+    BY_ID: 'id',
+    EXECUTE: 'execute',
+    DRAFT: 'draft',
   },
 };

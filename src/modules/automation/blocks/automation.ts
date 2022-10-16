@@ -1,5 +1,6 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { AutomationOutputTypes } from '../types/output.type';
 
-export interface AutomationInterface {
+export interface Automation {
   output: AutomationOutputTypes;
 }

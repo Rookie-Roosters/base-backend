@@ -1,3 +1,3 @@
-import { AutomationOutputVariableInterface } from '../interfaces/outputs/output-variable.interface';
+import { AutomationOutputVariable } from '@automation/blocks/outputs/output-variable';
 
-export type AutomationOutputTypes = AutomationOutputVariableInterface;
+export type AutomationOutputTypes = AutomationOutputVariable;

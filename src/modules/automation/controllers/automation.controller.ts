@@ -7,7 +7,6 @@ import { Delete, Body, Param } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiParam } from '@nestjs/swagger';
 import { ApiController, ApiDelete, ApiGet, ApiPatch, ApiPost } from '@shared/decorators';
 import { DeleteResult } from 'typeorm';
-import { Type } from '@nestjs/common';
 
 @ApiController(API_ENDPOINTS.AUTOMATION.BASE_PATH, API_VERSIONS.V1)
 export class AutomationController {
@@ -40,6 +39,24 @@ export class AutomationController {
   ): Promise<HttpResponse<any>> {
     return {
       data: await this.automationService.execute(company, id),
+    };
+  }
+
+  @ApiPost({
+    path: `${API_ENDPOINTS.AUTOMATION.DRAFT}/:${API_ENDPOINTS.AUTOMATION.BY_COMPANY_ID}`,
+    summary: 'Save a `Automation` draft',
+    description: 'Saves a new `Automation` draft and returns the `Automation`',
+    responseType: AutomationResponseDto,
+    responseDescription: 'The `Automation` draft',
+  })
+  @ApiParam({ name: API_ENDPOINTS.AUTOMATION.BY_COMPANY_ID, type: Number, description: "Company's Id" })
+  @ApiBody({ type: Object })
+  async saveDraft(
+    @Body() automation: Automation,
+    @Param(API_ENDPOINTS.AUTOMATION.BY_COMPANY_ID, ValidateIdPipe) company: number,
+  ): Promise<HttpResponse<AutomationResponseDto>> {
+    return {
+      data: await this.automationService.saveDraft(automation, company),
     };
   }
 

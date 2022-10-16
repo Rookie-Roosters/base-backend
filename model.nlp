@@ -33,9 +33,54 @@
           },
           "useStemDict": true
         },
-        "stemDict": {},
-        "intentDict": {},
-        "sentences": [],
+        "stemDict": {
+          "hol": {
+            "intent": "saludo.bienvenida",
+            "domain": "default"
+          },
+          "buen,dia": {
+            "intent": "saludo.bienvenida",
+            "domain": "default"
+          },
+          "buen,tard": {
+            "intent": "saludo.bienvenida",
+            "domain": "default"
+          },
+          "buen,noch": {
+            "intent": "saludo.bienvenida",
+            "domain": "default"
+          }
+        },
+        "intentDict": {
+          "saludo.bienvenida": "default"
+        },
+        "sentences": [
+          {
+            "domain": "default",
+            "utterance": "hola",
+            "intent": "saludo.bienvenida"
+          },
+          {
+            "domain": "default",
+            "utterance": "buen dia",
+            "intent": "saludo.bienvenida"
+          },
+          {
+            "domain": "default",
+            "utterance": "buenos dias",
+            "intent": "saludo.bienvenida"
+          },
+          {
+            "domain": "default",
+            "utterance": "buenas tardes",
+            "intent": "saludo.bienvenida"
+          },
+          {
+            "domain": "default",
+            "utterance": "buenas noches",
+            "intent": "saludo.bienvenida"
+          }
+        ],
         "domains": {
           "master_domain": {
             "settings": {
@@ -49,10 +94,42 @@
               "filterZeros": true,
               "log": true
             },
-            "features": {},
-            "intents": {},
-            "intentFeatures": {},
-            "featuresToIntent": {},
+            "features": {
+              "hol": 1,
+              "buen": 1,
+              "dia": 1,
+              "tard": 1,
+              "noch": 1
+            },
+            "intents": {
+              "saludo.bienvenida": 1
+            },
+            "intentFeatures": {
+              "saludo.bienvenida": {
+                "hol": 1,
+                "buen": 1,
+                "dia": 1,
+                "tard": 1,
+                "noch": 1
+              }
+            },
+            "featuresToIntent": {
+              "hol": [
+                "saludo.bienvenida"
+              ],
+              "buen": [
+                "saludo.bienvenida"
+              ],
+              "dia": [
+                "saludo.bienvenida"
+              ],
+              "tard": [
+                "saludo.bienvenida"
+              ],
+              "noch": [
+                "saludo.bienvenida"
+              ]
+            },
             "neuralNetwork": {
               "settings": {
                 "locale": "es",
@@ -64,14 +141,55 @@
                 "spellCheckDistance": 1,
                 "filterZeros": true,
                 "log": true
-              }
+              },
+              "features": [
+                "hol",
+                "buen",
+                "dia",
+                "tard",
+                "noch"
+              ],
+              "intents": [
+                "saludo.bienvenida"
+              ],
+              "perceptrons": [
+                [
+                  7.482265949249268,
+                  5.752250671386719,
+                  1.9087203741073608,
+                  1.9280022382736206,
+                  1.9187103509902954,
+                  6.626150224951848
+                ]
+              ]
             }
           }
         }
       }
     },
     "intentDomains": {},
-    "extraSentences": []
+    "extraSentences": [
+      [
+        "es",
+        "hola"
+      ],
+      [
+        "es",
+        "buen dia"
+      ],
+      [
+        "es",
+        "buenos dias"
+      ],
+      [
+        "es",
+        "buenas tardes"
+      ],
+      [
+        "es",
+        "buenas noches"
+      ]
+    ]
   },
   "ner": {
     "settings": {
@@ -85,7 +203,21 @@
     "settings": {
       "tag": "nlg-manager"
     },
-    "responses": {}
+    "responses": {
+      "es": {
+        "saludo.bienvenida": [
+          {
+            "answer": "Hola!"
+          },
+          {
+            "answer": "Buen día!"
+          },
+          {
+            "answer": "¿En qué te puedo ayudar?"
+          }
+        ]
+      }
+    }
   },
   "actionManager": {
     "settings": {

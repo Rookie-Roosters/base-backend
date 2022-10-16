@@ -1,8 +1,7 @@
-import { AutomationOutputVariable } from '@automation/blocks/outputs/output-variable';
+import { AutomationOutputVariable } from '@automation/blocks';
 import { AutomationEntity } from '@automation/entities/automation.entity';
-import { AutomationInputVariableEntity } from '@automation/entities/inputs/input-variable.entity';
-import { AutomationOutputVariableEntity } from '@automation/entities/output/output-variable.entity';
-import { Injectable, Inject, forwardRef, ForbiddenException } from '@nestjs/common';
+import { AutomationOutputVariableActionEntity, AutomationOutputVariableEntity } from '@automation/entities/output';
+import { Injectable, forwardRef, Inject, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AutomationCommonClass } from '../common/common.class';
@@ -14,6 +13,8 @@ export class AutomationOutputVariableService implements AutomationCommonClass<Au
     @Inject(forwardRef(() => AutomationCommonService)) private automationCommonService: AutomationCommonService,
     @InjectRepository(AutomationOutputVariableEntity)
     private automationOutputVariablesRepository: Repository<AutomationOutputVariableEntity>,
+    @InjectRepository(AutomationOutputVariableActionEntity)
+    private automationOutputVariablesActionsRepository: Repository<AutomationOutputVariableActionEntity>,
   ) {}
 
   public type: string = 'outputVariable';
@@ -35,12 +36,23 @@ export class AutomationOutputVariableService implements AutomationCommonClass<Au
           name: block.name,
         },
       }))
-    )
-      await this.automationOutputVariablesRepository.save({
+    ) {
+      const createdOutputVariable = await this.automationOutputVariablesRepository.save({
         automation,
         name: block.name,
       });
-    else throw new ForbiddenException('Output variable already exists');
+      if (createdOutputVariable) {
+        await Promise.all(
+          block.actions.map(async (action) => {
+            await this.automationOutputVariablesActionsRepository.save({
+              outputVariable: createdOutputVariable,
+              name: action.name,
+              url: action.url,
+            });
+          }),
+        );
+      } else throw new ForbiddenException('Output variable not created');
+    } else throw new ForbiddenException('Output variable already exists');
     await this.automationCommonService.save(block.input, automation);
   }
 

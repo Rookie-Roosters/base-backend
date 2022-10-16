@@ -48,11 +48,31 @@ export class AutomationService {
 
   async execute(company: number, id: number): Promise<any> {
     const automation = await this.findOne(company, id);
-    return await this.exec(automation.automation.output, company);
+    if (!automation.draft) return await this.exec(automation.automation.output, company);
+    else throw new ForbiddenException('The Automation must not be a draft');
   }
 
   async rawExecute(automation: Automation) {
     return await this.exec(automation.output);
+  }
+
+  async saveDraft(automation: Automation, company: number): Promise<AutomationResponseDto> {
+    const filename = Array(32)
+      .fill(null)
+      .map(() => Math.round(Math.random() * 16).toString(16))
+      .join('');
+    this.createFile(filename, automation);
+    const createdAutomation = await this.automationRepository.save({
+      filename,
+      company,
+      draft: true,
+    });
+    return {
+      id: createdAutomation.id!,
+      company,
+      automation,
+      draft: createdAutomation.draft,
+    };
   }
 
   async create(automation: Automation, company: number): Promise<AutomationResponseDto> {
@@ -72,6 +92,7 @@ export class AutomationService {
         id: createdAutomation.id!,
         company,
         automation,
+        draft: createdAutomation.draft,
       };
     } catch (ex) {
       await this.delete(company, createdAutomation.id);
@@ -95,6 +116,7 @@ export class AutomationService {
           id: automation.id,
           company,
           automation: automationFile,
+          draft: automation.draft,
         };
       }),
     );
@@ -116,6 +138,7 @@ export class AutomationService {
         id: automation.id,
         company,
         automation: automationFile,
+        draft: automation.draft,
       };
     } else throw new ForbiddenException('Automation must exists');
   }

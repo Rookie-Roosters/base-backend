@@ -35,9 +35,11 @@ export class AutomationInputVariableService implements AutomationCommonClass<Aut
       },
     });
     if (outputVariable) {
-      const json = fs.readFileSync(`${STORAGE_PATHS.AUTOMATION}/${outputVariable.automation.filename}.json`);
-      const automation = JSON.parse(json as unknown as string);
-      return this.automationCommonService.exec(automation.output, company);
+      if (!outputVariable.automation.draft) {
+        const json = fs.readFileSync(`${STORAGE_PATHS.AUTOMATION}/${outputVariable.automation.filename}.json`);
+        const automation = JSON.parse(json as unknown as string);
+        return this.automationCommonService.exec(automation.output, company);
+      } else throw new ForbiddenException('The Automation input variable must not be a draft');
     } else throw new ForbiddenException('Output variable does not exist');
   }
 
@@ -49,12 +51,17 @@ export class AutomationInputVariableService implements AutomationCommonClass<Aut
         },
         name: block.name,
       },
+      relations: {
+        automation: true,
+      },
     });
     if (variable) {
-      await this.automationInputVariablesRepository.save({
-        automation: automation,
-        name: block.name,
-      });
+      if (!variable.automation.draft) {
+        await this.automationInputVariablesRepository.save({
+          automation: automation,
+          name: block.name,
+        });
+      } else throw new ForbiddenException('The Automation input variable must not be a draft');
     } else throw new ForbiddenException('Variable must exists');
   }
 
@@ -71,9 +78,11 @@ export class AutomationInputVariableService implements AutomationCommonClass<Aut
       },
     });
     if (outputVariable) {
-      const json = fs.readFileSync(`${STORAGE_PATHS.AUTOMATION}/${outputVariable.automation.filename}.json`);
-      const automation = JSON.parse(json as unknown as string);
-      return this.automationCommonService.getOutputType(automation.output, company);
+      if (!outputVariable.automation.draft) {
+        const json = fs.readFileSync(`${STORAGE_PATHS.AUTOMATION}/${outputVariable.automation.filename}.json`);
+        const automation = JSON.parse(json as unknown as string);
+        return this.automationCommonService.getOutputType(automation.output, company);
+      } else throw new ForbiddenException('The Automation input variable must not be a draft');
     } else throw new ForbiddenException('Output variable does not exist');
   }
 }

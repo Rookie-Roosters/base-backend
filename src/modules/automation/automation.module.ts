@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AutomationController } from './controllers/automation.controller';
 import { AutomationEntity } from './entities/automation.entity';
 import { AutomationInputVariableEntity } from './entities/inputs/input-variable.entity';
-import { AutomationOutputVariableEntity } from './entities/output/output-variable.entity';
+import { AutomationOutputVariableActionEntity, AutomationOutputVariableEntity } from './entities/output';
 import { AutomationService } from './services/automation.service';
 import { AutomationCommonService } from './services/common/common.service';
 import {
@@ -28,7 +28,8 @@ import { AutomationOutputVariableService } from './services/outputs';
     TypeOrmModule.forFeature([
       AutomationEntity,
       AutomationOutputVariableEntity,
-      AutomationInputVariableEntity
+      AutomationOutputVariableActionEntity,
+      AutomationInputVariableEntity,
     ]),
   ],
   controllers: [AutomationController],

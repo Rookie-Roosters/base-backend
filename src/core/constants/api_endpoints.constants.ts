@@ -30,6 +30,7 @@ export const API_ENDPOINTS = {
     BASE_PATH: 'automation',
     BY_COMPANY_ID: 'company',
     BY_ID: 'id',
-    EXECUTE: 'execute'
+    EXECUTE: 'execute',
+    DRAFT: 'draft',
   }
 };

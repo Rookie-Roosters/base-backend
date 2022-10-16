@@ -7,9 +7,8 @@
     "**/.DS_Store": true,
     "**/Thumbs.db": true,
     "node_modules": true,
-    ".eslintrc.js": true,
-    ".prettierrc": true,
-    ".vscode": true
+    ".vscode": true,
+    "dist": true
   },
   "hide-files.files": []
 }

@@ -19,13 +19,14 @@ export class AutomationInputCurrencyService implements AutomationCommonClass<Aut
   }
 
   async exec(block: AutomationInputCurrency, company?: number): Promise<number> {
-    if (await this.validateCurrency(block.from) && await this.validateCurrency(block.to)) {
+    if ((await this.validateCurrency(block.from)) && (await this.validateCurrency(block.to))) {
       return await Convert(1).from(block.from.toUpperCase()).to(block.to.toUpperCase());
     } else throw new ForbiddenException('Currency must exits');
   }
 
   async save(block: AutomationInputCurrency, automation: AutomationEntity): Promise<void> {
-    //check if the currencies are valid
+    if (!((await this.validateCurrency(block.from)) && (await this.validateCurrency(block.to))))
+      throw new ForbiddenException('Currency must exits');
   }
 
   async getOutputType(block: AutomationInputCurrency, company?: number): Promise<'number'> {

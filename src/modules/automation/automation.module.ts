@@ -1,9 +1,11 @@
+import { CompaniesModule } from '@companies/companies.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AutomationController } from './controllers/automation.controller';
 import { AutomationEntity } from './entities/automation.entity';
+import { AutomationInputDateNowEntity } from './entities/inputs/input-date-now.entity';
 import { AutomationInputVariableEntity } from './entities/inputs/input-variable.entity';
-import { AutomationOutputVariableActionEntity, AutomationOutputVariableEntity } from './entities/output';
+import { AutomationOutputChartActionEntity, AutomationOutputChartEntity, AutomationOutputChartValueEntity, AutomationOutputVariableActionEntity, AutomationOutputVariableEntity } from './entities/output';
 import { AutomationService } from './services/automation.service';
 import { AutomationCommonService } from './services/common/common.service';
 import {
@@ -12,8 +14,13 @@ import {
   AutomationConditionalNotService,
   AutomationConditionalOrService,
 } from './services/conditionals';
-import { AutomationInputConstantService } from './services/inputs';
-import { AutomationInputVariableService } from './services/inputs/input-variable.service';
+import {
+  AutomationInputConstantService,
+  AutomationInputCurrencyService,
+  AutomationInputDateNowService,
+  AutomationInputDateService,
+  AutomationInputVariableService,
+} from './services/inputs';
 import {
   AutomationOperatorAddService,
   AutomationOperatorDivService,
@@ -22,15 +29,24 @@ import {
   AutomationOperatorRootService,
   AutomationOperatorSubService,
 } from './services/operators';
-import { AutomationOutputVariableService } from './services/outputs';
+import { AutomationOutputChartService, AutomationOutputVariableService } from './services/outputs';
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       AutomationEntity,
+
+      //Outputs
       AutomationOutputVariableEntity,
       AutomationOutputVariableActionEntity,
+      AutomationOutputChartEntity,
+      AutomationOutputChartActionEntity,
+      AutomationOutputChartValueEntity,
+      
+      //Inputs
       AutomationInputVariableEntity,
+      AutomationInputDateNowEntity,
     ]),
+    CompaniesModule,
   ],
   controllers: [AutomationController],
   providers: [
@@ -40,6 +56,9 @@ import { AutomationOutputVariableService } from './services/outputs';
     //Inputs
     AutomationInputConstantService,
     AutomationInputVariableService,
+    AutomationInputDateService,
+    AutomationInputDateNowService,
+    AutomationInputCurrencyService,
 
     //Conditionals
     AutomationConditionalIfService,
@@ -57,6 +76,7 @@ import { AutomationOutputVariableService } from './services/outputs';
 
     //Outputs
     AutomationOutputVariableService,
+    AutomationOutputChartService,
   ],
   exports: [],
 })

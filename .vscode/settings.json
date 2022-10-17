@@ -6,9 +6,7 @@
     "**/CVS": true,
     "**/.DS_Store": true,
     "**/Thumbs.db": true,
-    "node_modules": true,
-    ".vscode": true,
-    "dist": true
+    ".vscode": true
   },
   "hide-files.files": []
 }

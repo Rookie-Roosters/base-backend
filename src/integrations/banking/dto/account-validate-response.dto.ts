@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsDefined, IsNumber, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsBoolean, IsNumber, IsString } from 'class-validator';
 
-export class ResponseValidateAccountDto {
+export class AccountValidateResponseDto {
   @ApiProperty({ description: "User's full name" })
   @IsString()
   fullName: string;

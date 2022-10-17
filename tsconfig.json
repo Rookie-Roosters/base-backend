@@ -24,7 +24,7 @@
 
       // Integrations
       "@authentication/*": ["src/integrations/authentication/*"],
-      "@base-api/*": ["src/integrations/base-api/*"],
+      "@banking/*": ["src/integrations/banking/*"],
 
       // Modules
       "@users/*": ["src/modules/users/*"],
@@ -32,7 +32,7 @@
       "@chatbot*": ["src/modules/chatbot/*"],
       "@chats/*": ["src/modules/chats/*"],
       "@automation/*": ["src/modules/automation/*"],
-      "@notifications/*": ["src/modules/notifications/*"],
+      "@notifications/*": ["src/modules/notifications/*"]
     }
   }
 }

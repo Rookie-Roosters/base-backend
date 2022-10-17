@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDefined, IsNumber, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsString } from 'class-validator';
 
-export class ResponseGetRecipientsDto {
+export class RecipientsGetResponseDto {
   @ApiProperty({ description: 'The ID of the recipient' })
   @IsString()
   idRecipient: '3fa85f64-5717-4562-b3fc-2c963f66afa6';

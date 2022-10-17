@@ -25,6 +25,6 @@ export class Branch {
   phone?: string;
 
   @ApiProperty({ description: 'A list of users who work in this branch office' })
-  @OneToMany(() => User, (user) => user.branch)
+  @OneToMany(() => User, (user: User) => user.branch)
   employees: User[];
 }

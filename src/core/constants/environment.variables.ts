@@ -1,4 +1,4 @@
-import { IsAlphanumeric, IsEnum, IsNumber, IsInt, IsString } from 'class-validator';
+import { IsAlphanumeric, IsEnum, IsNumber, IsInt, IsString, IsUrl } from 'class-validator';
 
 export enum Environment {
   DEVELOPMENT = 'development',
@@ -24,6 +24,8 @@ export class EnvironmentVariables {
   JWT_EXPIRATION_TIME: string;
 
   // BASE API
+  @IsUrl()
+  BASE_API_URL: string;
   @IsAlphanumeric()
   BASE_API_KEY: string;
   @IsAlphanumeric()

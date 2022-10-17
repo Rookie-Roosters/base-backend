@@ -18,16 +18,14 @@ export class AutomationService {
   ) {
     const a: Automation = {
       "output": {
-        "type": "outputChart",
-        "name": "grafica",
-        "actions": [{
-          "name": "hola",
-          "url": "https"
-        }],
+        "type": "outputNotification",
+        "title": "Notificación de prueba",
+        "url": "http://localhost",
+        "actions": [],
+        "text": "Hola mundo",
         "input": {
-          "type": "inputCurrency",
-          "from": "USD",
-          "to": "MXN"
+          "type": "inputConstant",
+          "value": false
         }
       }
     }

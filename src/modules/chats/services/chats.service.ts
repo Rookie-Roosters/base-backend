@@ -2,17 +2,18 @@ import { MessageDto, ResponseChatDto } from '@chats/dtos';
 import { Chat, Message } from '@chats/entities';
 import { Injectable, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { NotificationsGateway } from '@notifications/notifications.gateway';
 import { User } from '@users/entities';
 import { UsersService } from '@users/services';
 import { Repository } from 'typeorm';
 
-//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOjEsImlkZW50aWZpZXIiOiJsZW9uZWxAbGVvbmVsLmNvbSIsImlhdCI6MTY2NTkzOTI1NywiZXhwIjoxNjY1OTM5ODU3fQ.fQsJ2e0_KO-sYEzqhbCqL40ppA_g3wOsffJR2wKd_Ek
 @Injectable()
 export class ChatsService {
   constructor(
     @InjectRepository(Chat) private chatsRepository: Repository<Chat>,
     @InjectRepository(Message) private messagesRepository: Repository<Message>,
     private usersService: UsersService,
+    private notifications: NotificationsGateway,
   ) {}
 
   async create(currentUser: User, receiver: number): Promise<ResponseChatDto> {
@@ -152,9 +153,9 @@ export class ChatsService {
           sender: currentUser,
           message: message.message,
         });
-        //Aquí enviar la notificación
+        await this.notifications.send(receiverUser, `${receiverUser.fullName}`, message.message, '');
         return this.find(currentUser, receiver, 0);
-      } else throw new ForbiddenException('Chat must exists');
+      } else throw new ForbiddenException('Chat must exist');
     } else throw new ForbiddenException('Current User can not be the Receiving User');
   }
 }

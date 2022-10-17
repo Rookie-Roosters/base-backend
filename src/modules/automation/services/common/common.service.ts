@@ -21,7 +21,11 @@ import {
   AutomationOperatorRootService,
   AutomationOperatorSubService,
 } from '../operators';
-import { AutomationOutputChartService, AutomationOutputVariableService } from '../outputs';
+import {
+  AutomationOutputChartService,
+  AutomationOutputNotificationService,
+  AutomationOutputVariableService,
+} from '../outputs';
 
 @Injectable()
 export class AutomationCommonService {
@@ -67,6 +71,8 @@ export class AutomationCommonService {
     private automationOutputVariableService: AutomationOutputVariableService,
     @Inject(forwardRef(() => AutomationOutputChartService))
     private automationOutputChartService: AutomationOutputChartService,
+    @Inject(forwardRef(() => AutomationOutputNotificationService))
+    private automationOutputNotificationServie: AutomationOutputNotificationService,
   ) {}
 
   async exec(block: any, company: number) {
@@ -83,7 +89,7 @@ export class AutomationCommonService {
     throw new ForbiddenException(`Attribute not found in common.save`);
   }
 
-  async getOutputType(block: any, company: number): Promise<'boolean' | 'number' | 'date'> {
+  async getOutputType(block: any, company: number): Promise<'boolean' | 'number' | 'date' | 'void' | 'number[]'> {
     const attributes = Object.getOwnPropertyNames(this);
     for (let attribute of attributes)
       if (this[attribute].type == block.type) return await this[attribute].getOutputType(block, company);

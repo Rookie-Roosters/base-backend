@@ -38,10 +38,10 @@ export class NotificationsGateway implements OnGatewayDisconnect, OnGatewayInit,
     this.socketsService.addSocketConnection(currentAuth, client.id);
   }
 
-  async send(@CurrentAuth() currentAuth: User, text: string, link: string) {
+  async send(user : User, title: string, text: string, link: string) {
     //const notification = await this.notificationsService.save(text,link,currentAuth);
-    const notification = { text: text, link: link, date: Date.now() };
-    const sockets = await this.socketsService.getSockets(currentAuth.id);
+    const notification = { title, text, link, date: Date.now() };
+    const sockets = await this.socketsService.getSockets(user.id);
     const serverSockets = await this.server.fetchSockets();
     sockets.map((socket) => {
       if (serverSockets.findIndex((serverSockets) => serverSockets.id == socket.socketId) == -1) {

@@ -1,11 +1,18 @@
 import { CompaniesModule } from '@companies/companies.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { NotificationsModule } from '@notifications/notifications.module';
 import { AutomationController } from './controllers/automation.controller';
 import { AutomationEntity } from './entities/automation.entity';
 import { AutomationInputDateNowEntity } from './entities/inputs/input-date-now.entity';
 import { AutomationInputVariableEntity } from './entities/inputs/input-variable.entity';
-import { AutomationOutputChartActionEntity, AutomationOutputChartEntity, AutomationOutputChartValueEntity, AutomationOutputVariableActionEntity, AutomationOutputVariableEntity } from './entities/output';
+import {
+  AutomationOutputChartActionEntity,
+  AutomationOutputChartEntity,
+  AutomationOutputChartValueEntity,
+  AutomationOutputVariableActionEntity,
+  AutomationOutputVariableEntity,
+} from './entities/output';
 import { AutomationService } from './services/automation.service';
 import { AutomationCommonService } from './services/common/common.service';
 import {
@@ -29,7 +36,11 @@ import {
   AutomationOperatorRootService,
   AutomationOperatorSubService,
 } from './services/operators';
-import { AutomationOutputChartService, AutomationOutputVariableService } from './services/outputs';
+import {
+  AutomationOutputChartService,
+  AutomationOutputNotificationService,
+  AutomationOutputVariableService,
+} from './services/outputs';
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -41,12 +52,13 @@ import { AutomationOutputChartService, AutomationOutputVariableService } from '.
       AutomationOutputChartEntity,
       AutomationOutputChartActionEntity,
       AutomationOutputChartValueEntity,
-      
+
       //Inputs
       AutomationInputVariableEntity,
       AutomationInputDateNowEntity,
     ]),
     CompaniesModule,
+    NotificationsModule,
   ],
   controllers: [AutomationController],
   providers: [
@@ -77,6 +89,7 @@ import { AutomationOutputChartService, AutomationOutputVariableService } from '.
     //Outputs
     AutomationOutputVariableService,
     AutomationOutputChartService,
+    AutomationOutputNotificationService,
   ],
   exports: [],
 })

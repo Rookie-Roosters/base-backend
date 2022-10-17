@@ -5,6 +5,7 @@ import to from 'await-to-js';
 
 import { CompanyCreateDto, CompanyUpdateDto } from '../../dto';
 import { Company } from '../../entities';
+import { User } from '@users/entities';
 
 @Injectable()
 export class CompaniesService {
@@ -42,5 +43,15 @@ export class CompaniesService {
     const company = await this.companiesRepository.findOneBy({ id });
     if (!company) throw new NotFoundException('Company not found');
     return await this.companiesRepository.remove(company);
+  }
+
+  async getUserCompany(user: User): Promise<Company> {
+    // const company = await this.companiesRepository.findOne({
+    //   where: {
+    //     branches: {
+    //     }
+    //   }
+    // })
+    throw new Error('Method not implemented.');
   }
 }

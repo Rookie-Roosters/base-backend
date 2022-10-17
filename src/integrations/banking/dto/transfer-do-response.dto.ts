@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDefined, IsString, MaxLength, MinLength } from 'class-validator';
 
-export class ResponseDoTransferFXDto {
+export class TransferDoResponseDto {
   @ApiProperty({ description: 'First additional prop' })
   additionalProp1: Record<string, any>;
   @ApiProperty({ description: 'Second additional prop' })

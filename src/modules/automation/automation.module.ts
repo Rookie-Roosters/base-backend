@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AutomationController } from './controllers/automation.controller';
 import { AutomationEntity } from './entities/automation.entity';
+import { AutomationInputDateNowEntity } from './entities/inputs/input-date-now.entity';
 import { AutomationInputVariableEntity } from './entities/inputs/input-variable.entity';
 import { AutomationOutputVariableActionEntity, AutomationOutputVariableEntity } from './entities/output';
 import { AutomationService } from './services/automation.service';
@@ -13,8 +14,13 @@ import {
   AutomationConditionalNotService,
   AutomationConditionalOrService,
 } from './services/conditionals';
-import { AutomationInputConstantService } from './services/inputs';
-import { AutomationInputVariableService } from './services/inputs/input-variable.service';
+import {
+  AutomationInputConstantService,
+  AutomationInputCurrencyService,
+  AutomationInputDateNowService,
+  AutomationInputDateService,
+  AutomationInputVariableService,
+} from './services/inputs';
 import {
   AutomationOperatorAddService,
   AutomationOperatorDivService,
@@ -31,6 +37,7 @@ import { AutomationOutputVariableService } from './services/outputs';
       AutomationOutputVariableEntity,
       AutomationOutputVariableActionEntity,
       AutomationInputVariableEntity,
+      AutomationInputDateNowEntity,
     ]),
     CompaniesModule,
   ],
@@ -42,6 +49,9 @@ import { AutomationOutputVariableService } from './services/outputs';
     //Inputs
     AutomationInputConstantService,
     AutomationInputVariableService,
+    AutomationInputDateService,
+    AutomationInputDateNowService,
+    AutomationInputCurrencyService,
 
     //Conditionals
     AutomationConditionalIfService,

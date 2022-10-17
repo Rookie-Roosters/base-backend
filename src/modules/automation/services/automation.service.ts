@@ -15,7 +15,20 @@ export class AutomationService {
     @InjectRepository(AutomationEntity) private automationRepository: Repository<AutomationEntity>,
     private automationCommonService: AutomationCommonService,
     private companiesService: CompaniesService,
-  ) {}
+  ) {
+    const a: Automation = {
+      "output": {
+        "type": "outputVariable",
+        "actions": [],
+        "name": "currency",
+        "input": {
+          "type": "inputCurrency",
+          "from": "USD",
+          "to": "MXN"
+        }
+      }
+    }
+  }
 
   private async exec(block: any, company?: number) {
     return await this.automationCommonService.exec(block, company);

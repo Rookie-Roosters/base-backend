@@ -6,7 +6,7 @@ import {
   AutomationConditionalNotService,
   AutomationConditionalOrService,
 } from '../conditionals';
-import { AutomationInputConstantService } from '../inputs';
+import { AutomationInputConstantService, AutomationInputCurrencyService, AutomationInputDateNowService, AutomationInputDateService } from '../inputs';
 import { AutomationInputVariableService } from '../inputs/input-variable.service';
 import {
   AutomationOperatorAddService,
@@ -26,6 +26,12 @@ export class AutomationCommonService {
     private automationInputConstantService: AutomationInputConstantService,
     @Inject(forwardRef(() => AutomationInputVariableService))
     private automationInputVariableService: AutomationInputVariableService,
+    @Inject(forwardRef(() => AutomationInputDateService))
+    private automationInputDateService: AutomationInputDateService,
+    @Inject(forwardRef(() => AutomationInputDateNowService))
+    private automationInputDateNowService: AutomationInputDateNowService,
+    @Inject(forwardRef(() => AutomationInputCurrencyService))
+    private automationInputCurrencyService: AutomationInputCurrencyService,
 
     //Operators
     @Inject(forwardRef(() => AutomationOperatorAddService))

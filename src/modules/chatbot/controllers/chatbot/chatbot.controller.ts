@@ -9,6 +9,8 @@ import { ChatbotService } from '@chatbot/services';
 import { ApiController, ApiDelete, ApiGet, ApiPatch, ApiPost } from '@shared/decorators';
 
 import { ValidateIdPipe } from '@core/pipes/validate-id.pipe';
+import { UseSessionGuard } from '@users/decorators';
+import { ALL_ROLES, AuthRole } from '@authentication/constants';
 
 @ApiTags('Chatbot')
 @ApiController(API_ENDPOINTS.CHATBOT.BASE_PATH)
@@ -16,16 +18,19 @@ export class ChatbotController {
   constructor(private readonly chatbotService: ChatbotService) {}
 
   @ApiGet({
+    roles: [AuthRole.ADMIN],
     path: API_ENDPOINTS.CHATBOT.TRAIN,
     summary: 'Train the `Chatbot`',
     description: 'Trains the `Chatbot` with the new topics, questions or answers',
   })
+  @UseSessionGuard()
   async train(): Promise<IHttpResponse<void>> {
     await this.chatbotService.train();
     return {};
   }
 
   @ApiPost({
+    roles: [AuthRole.ADMIN],
     path: API_ENDPOINTS.CHATBOT.TOPICS,
     summary: 'Create a new `Chatbot` topic',
     description: 'Creates a new `Chatbot` topic for questions and answers, and returns the created topic',
@@ -33,6 +38,7 @@ export class ChatbotController {
     responseType: ResponseTopicDto,
   })
   @ApiBody({ type: RequestTopicDto, description: 'The topic to create' })
+  @UseSessionGuard()
   async createTopic(@Body() topic: RequestTopicDto): Promise<IHttpResponse<ResponseTopicDto>> {
     return {
       data: await this.chatbotService.createTopic(topic),
@@ -40,12 +46,14 @@ export class ChatbotController {
   }
 
   @ApiGet({
+    roles: [AuthRole.ADMIN],
     path: API_ENDPOINTS.CHATBOT.TOPICS,
     summary: 'Get all `Chatbot` topics',
     description: 'Returns all `Chatbot` topics',
     responseDescription: '`Chatbot` topics',
     responseType: [ResponseTopicDto],
   })
+  @UseSessionGuard()
   async findAll(): Promise<IHttpResponse<ResponseTopicDto[]>> {
     return {
       data: await this.chatbotService.findAll(),
@@ -53,12 +61,14 @@ export class ChatbotController {
   }
 
   @ApiDelete({
+    roles: [AuthRole.ADMIN],
     path: `${API_ENDPOINTS.CHATBOT.TOPICS}/:${API_ENDPOINTS.CHATBOT.BY_ID}`,
     summary: 'Delete a `Chatbot` topic',
     description: 'Deletes a `Chatbot` topic',
     responseType: DeleteResult,
   })
   @ApiParam({ name: API_ENDPOINTS.CHATBOT.BY_ID, description: 'id of the topic' })
+  @UseSessionGuard()
   async delete(@Param(API_ENDPOINTS.CHATBOT.BY_ID, ValidateIdPipe) id: number): Promise<IHttpResponse<DeleteResult>> {
     return {
       data: await this.chatbotService.delete(id),
@@ -66,6 +76,7 @@ export class ChatbotController {
   }
 
   @ApiPatch({
+    roles: [AuthRole.ADMIN],
     path: `${API_ENDPOINTS.CHATBOT.QUESTION}/:${API_ENDPOINTS.CHATBOT.BY_ID}`,
     summary: 'Add a question to a topic',
     description: 'Adds a question to the topic and returns the topic',
@@ -74,6 +85,7 @@ export class ChatbotController {
   })
   @ApiParam({ name: API_ENDPOINTS.CHATBOT.BY_ID, type: Number, description: 'id of the topic' })
   @ApiBody({ type: QuestionDto, description: 'Question to add to the topic' })
+  @UseSessionGuard()
   async addQuestion(
     @Param(API_ENDPOINTS.CHATBOT.BY_ID, ValidateIdPipe) id: number,
     @Body() questionDto: QuestionDto,
@@ -84,6 +96,7 @@ export class ChatbotController {
   }
 
   @ApiDelete({
+    roles: [AuthRole.ADMIN],
     path: `${API_ENDPOINTS.CHATBOT.QUESTION}/:${API_ENDPOINTS.CHATBOT.BY_ID}`,
     summary: 'Delete a question from a topic',
     description: 'Deletes a question from the topic and returns the topic',
@@ -95,6 +108,7 @@ export class ChatbotController {
     type: QuestionDto,
     description: 'Question to delete from the topic',
   })
+  @UseSessionGuard()
   async deleteQuestion(
     @Param(API_ENDPOINTS.CHATBOT.BY_ID, ValidateIdPipe) id: number,
     @Body() questionDto: QuestionDto,
@@ -105,6 +119,7 @@ export class ChatbotController {
   }
 
   @ApiPatch({
+    roles: [AuthRole.ADMIN],
     path: `${API_ENDPOINTS.CHATBOT.ANSWER}/:${API_ENDPOINTS.CHATBOT.BY_ID}`,
     summary: 'Add a answer to a topic',
     description: 'Adds a anser to the topic and returns the topic',
@@ -113,6 +128,7 @@ export class ChatbotController {
   })
   @ApiParam({ name: API_ENDPOINTS.CHATBOT.BY_ID, type: Number, description: 'id of the topic' })
   @ApiBody({ type: AnswerDto, description: 'Answer to add to the topic' })
+  @UseSessionGuard()
   async addAnswer(
     @Param(API_ENDPOINTS.CHATBOT.BY_ID, ValidateIdPipe) id: number,
     @Body() answerDto: AnswerDto,
@@ -123,6 +139,7 @@ export class ChatbotController {
   }
 
   @ApiDelete({
+    roles: [AuthRole.ADMIN],
     path: `${API_ENDPOINTS.CHATBOT.ANSWER}/:${API_ENDPOINTS.CHATBOT.BY_ID}`,
     summary: 'Delete a answer from a topic',
     description: 'Deletes a answer from the topic and returns the topic',
@@ -134,6 +151,7 @@ export class ChatbotController {
     type: AnswerDto,
     description: 'Answer to delete from the topic',
   })
+  @UseSessionGuard()
   async deleteAnswer(
     @Param(API_ENDPOINTS.CHATBOT.BY_ID, ValidateIdPipe) id: number,
     @Body() answerDto: AnswerDto,
@@ -144,11 +162,13 @@ export class ChatbotController {
   }
 
   @ApiGet({
+    roles: ALL_ROLES,
     summary: 'Get the `Chatbot` response',
     description: 'Returns the answer to the question asked to the `Chatbot`',
     responseDescription: 'The `Chatbot` answer',
     responseType: AnswerDto,
   })
+  @UseSessionGuard()
   @ApiQuery({
     name: 'question',
     type: String,

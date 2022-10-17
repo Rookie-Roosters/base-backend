@@ -5,7 +5,7 @@ import { AutomationController } from './controllers/automation.controller';
 import { AutomationEntity } from './entities/automation.entity';
 import { AutomationInputDateNowEntity } from './entities/inputs/input-date-now.entity';
 import { AutomationInputVariableEntity } from './entities/inputs/input-variable.entity';
-import { AutomationOutputVariableActionEntity, AutomationOutputVariableEntity } from './entities/output';
+import { AutomationOutputChartActionEntity, AutomationOutputChartEntity, AutomationOutputChartValueEntity, AutomationOutputVariableActionEntity, AutomationOutputVariableEntity } from './entities/output';
 import { AutomationService } from './services/automation.service';
 import { AutomationCommonService } from './services/common/common.service';
 import {
@@ -29,13 +29,20 @@ import {
   AutomationOperatorRootService,
   AutomationOperatorSubService,
 } from './services/operators';
-import { AutomationOutputVariableService } from './services/outputs';
+import { AutomationOutputChartService, AutomationOutputVariableService } from './services/outputs';
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       AutomationEntity,
+
+      //Outputs
       AutomationOutputVariableEntity,
       AutomationOutputVariableActionEntity,
+      AutomationOutputChartEntity,
+      AutomationOutputChartActionEntity,
+      AutomationOutputChartValueEntity,
+      
+      //Inputs
       AutomationInputVariableEntity,
       AutomationInputDateNowEntity,
     ]),
@@ -69,6 +76,7 @@ import { AutomationOutputVariableService } from './services/outputs';
 
     //Outputs
     AutomationOutputVariableService,
+    AutomationOutputChartService,
   ],
   exports: [],
 })

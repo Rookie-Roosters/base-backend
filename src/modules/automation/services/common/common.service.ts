@@ -6,7 +6,12 @@ import {
   AutomationConditionalNotService,
   AutomationConditionalOrService,
 } from '../conditionals';
-import { AutomationInputConstantService, AutomationInputCurrencyService, AutomationInputDateNowService, AutomationInputDateService } from '../inputs';
+import {
+  AutomationInputConstantService,
+  AutomationInputCurrencyService,
+  AutomationInputDateNowService,
+  AutomationInputDateService,
+} from '../inputs';
 import { AutomationInputVariableService } from '../inputs/input-variable.service';
 import {
   AutomationOperatorAddService,
@@ -16,7 +21,7 @@ import {
   AutomationOperatorRootService,
   AutomationOperatorSubService,
 } from '../operators';
-import { AutomationOutputVariableService } from '../outputs';
+import { AutomationOutputChartService, AutomationOutputVariableService } from '../outputs';
 
 @Injectable()
 export class AutomationCommonService {
@@ -60,6 +65,8 @@ export class AutomationCommonService {
     //Outputs
     @Inject(forwardRef(() => AutomationOutputVariableService))
     private automationOutputVariableService: AutomationOutputVariableService,
+    @Inject(forwardRef(() => AutomationOutputChartService))
+    private automationOutputChartService: AutomationOutputChartService,
   ) {}
 
   async exec(block: any, company: number) {

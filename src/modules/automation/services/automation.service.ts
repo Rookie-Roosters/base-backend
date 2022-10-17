@@ -18,9 +18,12 @@ export class AutomationService {
   ) {
     const a: Automation = {
       "output": {
-        "type": "outputVariable",
-        "actions": [],
-        "name": "currency",
+        "type": "outputChart",
+        "name": "grafica",
+        "actions": [{
+          "name": "hola",
+          "url": "https"
+        }],
         "input": {
           "type": "inputCurrency",
           "from": "USD",

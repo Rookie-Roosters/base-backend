@@ -1,7 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { BankCredentials } from './bank_credentials.entity';
-import { Branch } from './branch.entity';
+import { User } from '@users/entities';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Company {
@@ -19,8 +18,11 @@ export class Company {
   @Column()
   icon?: string;
 
-  @OneToMany(() => Branch, (branch) => branch.company)
-  branches: Branch[];
+  @ManyToOne(() => User, (user) => user.id)
+  owner: User;
+
+  // @OneToMany(() => Branch, (branch) => branch.company)
+  // branches: Branch[];
 
   // @ApiProperty({ description: 'A list containing the credentials needed to access into each bank integration' })
   // @OneToMany(() => BankCredentials, (credentials) => credentials.company)

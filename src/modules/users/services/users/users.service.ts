@@ -6,6 +6,7 @@ import to from 'await-to-js';
 import { User } from '@users/entities';
 import { UserCreateDto, UserUpdateDto } from '@users/dto';
 import { Authentication } from '@authentication/entities';
+import { Company } from '@companies/entities';
 
 @Injectable()
 export class UsersService {
@@ -43,5 +44,17 @@ export class UsersService {
     const user = await this.usersRepository.findOneBy({ id });
     if (!user) throw new NotFoundException('User not found');
     return await this.usersRepository.remove(user);
+  }
+
+  async addCompany(id: number, company: Company) {
+    const user = await this.findOne({where: {id}});
+    user.company =  company;
+    await this.usersRepository.save(user);
+  }
+
+  async removeCompany(id: number) {
+    const user = await this.findOne({where: {id}});
+    user.company = null;
+    await this.usersRepository.save(user);
   }
 }

@@ -16,6 +16,7 @@ import { AuthenticationSignUpDto } from '@authentication/dto';
 import { AuthRole, AuthTokenResponse, AUTH_ROLE_VALUES, IDecodedToken } from '@authentication/constants';
 import { JwtService } from '@nestjs/jwt';
 import { Role } from '@authentication/entities';
+import { User } from '@users/entities';
 
 @Injectable()
 export class AuthenticationService {
@@ -24,6 +25,8 @@ export class AuthenticationService {
     private readonly authRepository: Repository<Authentication>,
     @InjectRepository(Role)
     private readonly rolesRepository: Repository<Role>,
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -88,5 +91,40 @@ export class AuthenticationService {
       }),
     );
     return data;
+  }
+
+  async addAuthRole(user: User, roleName: AuthRole) {
+    const auth = (
+      await this.usersRepository.findOne({
+        where: {
+          id: user.id,
+        },
+        relations: {
+          authentication: true,
+        },
+      })
+    ).authentication;
+    const foundRole = await this.rolesRepository.findOneBy({ name: roleName });
+    const index = auth.roles.findIndex((role) => role.id == foundRole.id);
+    if (index == -1) {
+      auth.roles.push(foundRole);
+      await this.authRepository.save(auth);
+    }
+  }
+
+  async removeAuthRole(user: User, roleName: AuthRole) {
+    const auth = (
+      await this.usersRepository.findOne({
+        where: {
+          id: user.id,
+        },
+        relations: {
+          authentication: true,
+        },
+      })
+    ).authentication;
+    const index = auth.roles.findIndex((role) => (role.name = roleName));
+    auth.roles = auth.roles.splice(index, 1);
+    this.authRepository.save(auth);
   }
 }

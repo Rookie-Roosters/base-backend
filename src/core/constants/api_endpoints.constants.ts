@@ -7,6 +7,7 @@ export const API_VERSIONS = {
 export const API_PARAMS = {
   BY_ID: ':id',
   BY_BANK: ':bank',
+  BY_USER: ':user'
 };
 
 export const API_ENDPOINTS = {
@@ -22,6 +23,7 @@ export const API_ENDPOINTS = {
   COMPANIES: {
     BASE_PATH: 'companies',
     BY_ID: API_PARAMS.BY_ID,
+    EMPOLYEE: `${API_PARAMS.BY_ID}/empoyee/${API_PARAMS.BY_USER}`,
     BANKING: {
       BASE_PATH: 'banking',
       SIGN_IN: `${API_PARAMS.BY_BANK}/sign-in`,
@@ -54,4 +56,8 @@ export const API_ENDPOINTS = {
     EXECUTE: 'execute',
     DRAFT: 'draft',
   },
+  BANKS: {
+    BASE_PATH: 'banks',
+    LOG_IN: 'log-in',
+  }
 };

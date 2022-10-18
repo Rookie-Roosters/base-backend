@@ -53,19 +53,43 @@ export class BaseBankService extends BankRepository {
     return data as boolean;
   }
 
-  refreshToken(params: AuthenticationParamsDto, authToken: string): Promise<AuthenticationResponseDto> {
+  async refreshToken(params: AuthenticationParamsDto, authToken: string): Promise<AuthenticationResponseDto> {
+    const { data } = await this.httpService.axiosRef.post(`${this.apiUrl}Users/RefreshToken`, params, {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': this.apiKey,
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    return data as AuthenticationResponseDto;
+  }
+
+  async doTransfer(params: TransferDoParamsDto, authToken: string): Promise<TransferDoResponseDto> {
+    const { data } = await this.httpService.axiosRef.post(`${this.apiUrl}Users/DoTransferFX`, params, {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': this.apiKey,
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    return data as TransferDoResponseDto;
+  }
+
+  async getAccounts(authToken: string): Promise<AccountsGetResponseDto[]> {
+    const { data } = await this.httpService.axiosRef.post(`${this.apiUrl}Accounts/GetAccounts`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': this.apiKey,
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    return data as AccountsGetResponseDto[];
+  }
+
+  async getMovements(params: MovementsGetParamsDto, authToken: string): Promise<MovementsGetResponseDto[]> {
     throw new Error('Method not implemented.');
   }
 
-  doTransfer(params: TransferDoParamsDto, authToken: string): Promise<TransferDoResponseDto> {
-    throw new Error('Method not implemented.');
-  }
-  getAccounts(authToken: string): Promise<AccountsGetResponseDto[]> {
-    throw new Error('Method not implemented.');
-  }
-  getMovements(params: MovementsGetParamsDto, authToken: string): Promise<MovementsGetResponseDto[]> {
-    throw new Error('Method not implemented.');
-  }
   getRecipients(params: RecipientsGetParamsDto, authToken: string): Promise<RecipientsGetResponseDto[]> {
     throw new Error('Method not implemented.');
   }

@@ -2,6 +2,7 @@ import { CompaniesModule } from '@companies/companies.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { NotificationsModule } from '@notifications/notifications.module';
+import { UsersModule } from '@users/users.module';
 import { AutomationController } from './controllers/automation.controller';
 import { AutomationEntity } from './entities/automation.entity';
 import { AutomationInputDateNowEntity } from './entities/inputs/input-date-now.entity';
@@ -58,6 +59,7 @@ import {
       AutomationInputDateNowEntity,
     ]),
     CompaniesModule,
+    UsersModule,
     NotificationsModule,
   ],
   controllers: [AutomationController],

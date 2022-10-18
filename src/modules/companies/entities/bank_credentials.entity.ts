@@ -11,17 +11,17 @@ export class BankCredentials {
   @Column()
   bankName: string;
 
-  @ApiProperty({ description: 'Bank key needed to log in' })
-  @Column()
-  account: string;
+  // @ApiProperty({ description: 'Bank key needed to log in' })
+  // @Column()
+  // account: string;
 
-  @ApiProperty({ description: 'Bank key needed to log in' })
-  @Column()
-  password: string;
+  // @ApiProperty({ description: 'Bank key needed to log in' })
+  // @Column()
+  // password: string;
 
-  @ApiProperty({ description: 'Bank key needed to log in' })
-  @Column()
-  token: number;
+  // @ApiProperty({ description: 'Bank key needed to log in' })
+  // @Column()
+  // token: number;
 
   // @ManyToOne(() => Company)
   // company: Company;

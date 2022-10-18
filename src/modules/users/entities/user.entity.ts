@@ -3,7 +3,7 @@ import { IsEmail, IsString } from 'class-validator';
 import { Column, OneToOne, JoinColumn, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
 import { Authentication } from '@authentication/entities';
-import { Branch } from '@companies/entities';
+import { Company } from '@companies/entities';
 
 @Entity()
 export class User {
@@ -26,13 +26,12 @@ export class User {
   @Column()
   lastName: string;
 
-  @ApiProperty({ description: 'Branch office where the employee is working on' })
-  @ManyToOne(() => Branch, (branch) => branch.employees)
-  branch: Branch;
-
   @OneToOne(() => Authentication)
   @JoinColumn()
   authentication?: Authentication;
+
+  @ManyToOne(() => Company, (company) => company.id, {onDelete: 'SET NULL'})
+  company: Company;
 
   get fullName(): string {
     return `${this.firstName} ${this.lastName}`;

@@ -11,7 +11,7 @@ async function bootstrap() {
   const environment = app.get(EnvironmentService);
   const version = environment.get('VERSION');
 
-  app.use(helmet());
+  // app.use(helmet());
   app.enableCors();
   app.setGlobalPrefix('api');
   app.enableVersioning({ type: VersioningType.URI, defaultVersion: version.toString() });

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Company } from './company.entity';
 
 @Entity()
@@ -11,18 +11,18 @@ export class BankCredentials {
   @Column()
   bankName: string;
 
-  // @ApiProperty({ description: 'Bank key needed to log in' })
-  // @Column()
-  // account: string;
+  @Column({ type: String, length: 4096 })
+  credentials: string;
 
-  // @ApiProperty({ description: 'Bank key needed to log in' })
-  // @Column()
-  // password: string;
+  @Column({ type: String, length: 4096 })
+  jwt: string;
 
-  // @ApiProperty({ description: 'Bank key needed to log in' })
-  // @Column()
-  // token: number;
+  @Column({ type: String, length: 4096 })
+  jwtRefresh: string;
 
-  // @ManyToOne(() => Company)
-  // company: Company;
+  @ManyToOne(() => Company, (company) => company.id, { onDelete: 'CASCADE' })
+  company: Company;
+
+  @Column({type: Boolean, default: false})
+  exipired: boolean;
 }

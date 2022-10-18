@@ -6,7 +6,38 @@
     "**/CVS": true,
     "**/.DS_Store": true,
     "**/Thumbs.db": true,
-    ".vscode": true
+    ".vscode": true,
+    "test": true,
+    ".env": true,
+    ".eslintrc.js": true,
+    ".gitignore": true,
+    ".prettierrc": true,
+    "docker-compose.yml": true,
+    "model.nlp": true,
+    "nest-cli.json": true,
+    "package-lock.json": true,
+    "package.json": true,
+    "README.md": true,
+    "tsconfig.build.json": true,
+    "tsconfig.json": true,
+    "dist": true,
+    "node_modules": true
   },
-  "hide-files.files": []
+  "hide-files.files": [
+    "test",
+    ".env",
+    ".eslintrc.js",
+    ".gitignore",
+    ".prettierrc",
+    "docker-compose.yml",
+    "model.nlp",
+    "nest-cli.json",
+    "package-lock.json",
+    "package.json",
+    "README.md",
+    "tsconfig.build.json",
+    "tsconfig.json",
+    "dist",
+    "node_modules"
+  ]
 }

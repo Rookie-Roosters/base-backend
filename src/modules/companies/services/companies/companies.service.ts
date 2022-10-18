@@ -103,12 +103,14 @@ export class CompaniesService {
   }
 
   async getUserCompany(user: User): Promise<Company> {
-    // const company = await this.companiesRepository.findOne({
-    //   where: {
-    //     branches: {
-    //     }
-    //   }
-    // })
-    throw new Error('Method not implemented.');
+    const ownerCompany = await this.companiesRepository.findOne({
+      where: {
+        owner: user,
+      },
+    });
+    if (ownerCompany) return ownerCompany;
+    const foundUser = await this.usersService.findOne({ where: { id: user.id }, relations: { company: true } });
+    if (foundUser.company) return foundUser.company;
+    throw new ForbiddenException('The User must be part of a Company');
   }
 }

@@ -43,7 +43,7 @@ export class BaseBankService extends BankRepository {
   }
 
   async signOut(params: AuthenticationParamsDto, authToken: string): Promise<boolean> {
-    const { data } = await this.httpService.axiosRef.post(`${this.apiUrl}Login/ValidateAccount`, params, {
+    const { data } = await this.httpService.axiosRef.put(`${this.apiUrl}Login/ValidateAccount`, params, {
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': this.apiKey,
@@ -76,7 +76,7 @@ export class BaseBankService extends BankRepository {
   }
 
   async getAccounts(authToken: string): Promise<AccountsGetResponseDto[]> {
-    const { data } = await this.httpService.axiosRef.post(`${this.apiUrl}Accounts/GetAccounts`, {
+    const { data } = await this.httpService.axiosRef.get(`${this.apiUrl}Accounts/GetAccounts`, {
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': this.apiKey,
@@ -87,10 +87,28 @@ export class BaseBankService extends BankRepository {
   }
 
   async getMovements(params: MovementsGetParamsDto, authToken: string): Promise<MovementsGetResponseDto[]> {
-    throw new Error('Method not implemented.');
+    const url = `${this.apiUrl}Movements/GetMovements?StartDate=${params.StartDate}&EndDate=${params.EndDate}&Account=${params.Account}`;
+    const { data } = await this.httpService.axiosRef(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': this.apiKey,
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    return data as MovementsGetResponseDto[];
   }
 
-  getRecipients(params: RecipientsGetParamsDto, authToken: string): Promise<RecipientsGetResponseDto[]> {
-    throw new Error('Method not implemented.');
+  async getRecipients(params: RecipientsGetParamsDto, authToken: string): Promise<RecipientsGetResponseDto[]> {
+    let url = `${this.apiUrl}Recipients/GetRecipientsAuthorized?=RecipientType${params.RecipientType}`;
+    if (params.Name) url += `&Name=${params.Name}`;
+    if (params.idCurrency) url += `&idCurrency=${params.idCurrency}`;
+    const { data } = await this.httpService.axiosRef(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': this.apiKey,
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    return data as RecipientsGetResponseDto[];
   }
 }

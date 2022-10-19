@@ -148,4 +148,19 @@ export class BankingService {
       return await this.bankCredentialsRepository.delete(bankCredentials.id);
     } else throw new ForbiddenException('Bank must exit');
   }
+
+  async findAll(user: User) : Promise<{bankName: string, id: number}[]> {
+    const company = await this.companiesService.getUserCompany(user);
+    const banks = await this.bankCredentialsRepository.find({
+      where: {
+        company,
+      }
+    })
+    return banks.map((bank) => {
+      return {
+        bankName: bank.bankName,
+        id: bank.id
+      };
+    });
+  }
 }

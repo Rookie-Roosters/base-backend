@@ -10,6 +10,7 @@ import {
   TransferDoParamsDto,
   TransferDoResponseDto,
 } from '@banking/dto';
+import { BankDto } from '@companies/dto/bank.dto';
 import { BankingService } from '@companies/services/banking/banking.service';
 import { API_ENDPOINTS, IHttpResponse } from '@core/constants';
 import { ValidateIdPipe } from '@core/pipes/validate-id.pipe';
@@ -18,6 +19,7 @@ import { ApiBody, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { ApiController, ApiDelete, ApiGet, ApiPost } from '@shared/decorators';
 import { UseSessionGuard } from '@users/decorators';
 import { User } from '@users/entities';
+import { stringify } from 'querystring';
 import { DeleteResult } from 'typeorm';
 
 @ApiController(API_ENDPOINTS.COMPANIES.BANKING.BASE_PATH)
@@ -26,6 +28,7 @@ export class BankingController {
 
   @ApiPost({
     path: API_ENDPOINTS.COMPANIES.BANKING.CREATE,
+    summary: 'Add a new `Bank`',
     roles: [AuthRole.OWNER, AuthRole.MANAGER],
     responseType: AuthenticationResponseDto,
   })
@@ -44,6 +47,7 @@ export class BankingController {
 
   @ApiPost({
     path: API_ENDPOINTS.COMPANIES.BANKING.SIGN_IN,
+    summary: 'Sign Up a `Bank` by Id',
     roles: [AuthRole.OWNER, AuthRole.MANAGER],
     responseType: AuthenticationResponseDto,
   })
@@ -61,6 +65,7 @@ export class BankingController {
 
   @ApiGet({
     path: API_ENDPOINTS.COMPANIES.BANKING.EXPIRED,
+    summary: 'Check if credentials have expired by Id',
     roles: [AuthRole.OWNER, AuthRole.MANAGER],
     responseType: Boolean,
   })
@@ -73,6 +78,7 @@ export class BankingController {
 
   @ApiGet({
     path: API_ENDPOINTS.COMPANIES.BANKING.ACCOUNTS,
+    summary: 'Get `Bank` accounts by Id',
     roles: [AuthRole.OWNER, AuthRole.MANAGER],
     responseType: Boolean,
   })
@@ -88,6 +94,7 @@ export class BankingController {
 
   @ApiGet({
     path: API_ENDPOINTS.COMPANIES.BANKING.MOVEMENTS,
+    summary: 'Get `Bank` movements by Id',
     roles: [AuthRole.OWNER, AuthRole.MANAGER],
     responseType: Boolean,
   })
@@ -113,6 +120,7 @@ export class BankingController {
 
   @ApiGet({
     path: API_ENDPOINTS.COMPANIES.BANKING.RECIPIENTS,
+    summary: 'Get `Bank` recipients by Id',
     roles: [AuthRole.OWNER, AuthRole.MANAGER],
     responseType: Boolean,
   })
@@ -137,7 +145,8 @@ export class BankingController {
   }
 
   @ApiPost({
-    path: API_ENDPOINTS.COMPANIES.BANKING.RECIPIENTS,
+    path: API_ENDPOINTS.COMPANIES.BANKING.TRANSFER,
+    summary: 'Da a `Bank` transfer by Id',
     roles: [AuthRole.OWNER, AuthRole.MANAGER],
     responseType: Boolean,
   })
@@ -155,8 +164,8 @@ export class BankingController {
 
   @ApiDelete({
     path: API_ENDPOINTS.COMPANIES.BY_ID,
+    summary: 'Delete a `Bank` by Id',
     roles: [AuthRole.OWNER, AuthRole.MANAGER],
-    responseType: AuthenticationResponseDto,
   })
   @ApiParam({ name: 'id', type: Number })
   @UseSessionGuard()
@@ -166,6 +175,20 @@ export class BankingController {
   ): Promise<IHttpResponse<DeleteResult>> {
     return {
       data: await this.bankingService.remove(currentUser, bank),
+    };
+  }
+
+  @ApiGet({
+    roles: [AuthRole.OWNER, AuthRole.MANAGER],
+    summary: 'Find all `Banks`',
+    responseType: [BankDto],
+  })
+  @UseSessionGuard()
+  async getBanks(
+    @CurrentAuth() currentUser: User,
+  ): Promise<IHttpResponse<{bankName: string, id: number}[]>> {
+    return {
+      data: await this.bankingService.findAll(currentUser),
     };
   }
 }

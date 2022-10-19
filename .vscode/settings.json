@@ -8,7 +8,6 @@
     "**/Thumbs.db": true,
     ".vscode": true,
     "test": true,
-    ".env": true,
     ".eslintrc.js": true,
     ".gitignore": true,
     ".prettierrc": true,
@@ -25,7 +24,6 @@
   },
   "hide-files.files": [
     "test",
-    ".env",
     ".eslintrc.js",
     ".gitignore",
     ".prettierrc",

@@ -14,6 +14,7 @@ export const API_ENDPOINTS = {
   USERS: {
     BASE_PATH: 'users',
     BY_ID: API_PARAMS.BY_ID,
+    ICON: `${API_PARAMS.BY_ID}/icon`,
     SESSION: {
       BASE_PATH: 'session',
       LOG_IN: 'log-in',
@@ -24,6 +25,7 @@ export const API_ENDPOINTS = {
     BASE_PATH: 'companies',
     BY_ID: API_PARAMS.BY_ID,
     EMPOLYEE: `${API_PARAMS.BY_ID}/empoyee/${API_PARAMS.BY_USER}`,
+    ICON: `${API_PARAMS.BY_ID}/icon`,
     BANKING: {
       BASE_PATH: 'banking',
       CREATE: `${API_PARAMS.BY_BANK}`,

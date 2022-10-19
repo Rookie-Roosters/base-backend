@@ -1,6 +1,5 @@
-import { Body, Param } from '@nestjs/common';
-import { ApiParam } from '@nestjs/swagger';
-
+import { Body, Param, UseInterceptors, UploadedFile, StreamableFile } from '@nestjs/common';
+import { ApiBody, ApiConsumes, ApiParam } from '@nestjs/swagger';
 import { ApiController, ApiDelete, ApiGet, ApiPatch, ApiPost, EntityByIdParam } from '@shared/decorators';
 import { API_ENDPOINTS, IHttpResponse } from '@core/constants';
 import { CurrentAuth } from '@authentication/decorators';
@@ -8,9 +7,13 @@ import { Company } from '@companies/entities';
 import { CompaniesService } from '@companies/services';
 import { CompanyCreateDto, CompanyUpdateDto } from '@companies/dto';
 import { UseSessionGuard } from '@users/decorators';
-import { ALL_ROLES, AuthRole } from '@authentication/constants';
+import {  AuthRole } from '@authentication/constants';
 import { User } from '@users/entities';
 import { ValidateIdPipe } from '@core/pipes/validate-id.pipe';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { extname } from 'path';
+import { diskStorage } from 'multer';
+import { STORAGE_PATHS } from '@core/constants/storage_paths.constant';
 
 @ApiController(API_ENDPOINTS.COMPANIES.BASE_PATH)
 export class CompaniesController {
@@ -61,7 +64,7 @@ export class CompaniesController {
   @ApiPatch({
     roles: [AuthRole.OWNER],
     path: API_ENDPOINTS.COMPANIES.BY_ID,
-    summary: 'Update an `Company` by Id',
+    summary: 'Update a `Company` by Id',
     description: 'Updates an `Company` record that matches the Id',
     responseDescription: 'A model containing the updated information of the matched `Company`',
     responseType: Company,
@@ -74,6 +77,68 @@ export class CompaniesController {
     @Body() body: CompanyUpdateDto,
   ): Promise<IHttpResponse<Company>> {
     const data = await this.companiesService.updateById(user, company.id, body);
+    return { data };
+  }
+
+  @ApiGet({
+    roles: [AuthRole.OWNER],
+    path: API_ENDPOINTS.COMPANIES.ICON,
+    summary: 'Get a `Company` icon by Id',
+    description: 'Gets an `Company` icon that matches the Id',
+    responseDescription: 'The `Company` icon',
+    responseType: Company,
+  })
+  @UseSessionGuard()
+  @ApiParam({ name: 'id', type: Number })
+  async getIcon(
+    @CurrentAuth() user: User,
+    @EntityByIdParam(Company) company: Company,
+  ): Promise<StreamableFile> {
+    return await this.companiesService.getIcon(user, company.id);
+  }
+
+  @ApiPatch({
+    roles: [AuthRole.OWNER],
+    path: API_ENDPOINTS.COMPANIES.ICON,
+    summary: 'Update a `Company` icon by Id',
+    description: 'Updates an `Company` icon that matches the Id',
+    responseDescription: 'A model containing the updated information of the matched `Company`',
+    responseType: Company,
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: STORAGE_PATHS.COMPANY_ICONS,
+        filename: (req, file, cb) => {
+          const randomName = Array(32)
+            .fill(null)
+            .map(() => Math.round(Math.random() * 16).toString(16))
+            .join('');
+          cb(null, `${randomName}${extname(file.originalname)}`);
+        },
+      }),
+    }),
+  )
+  @UseSessionGuard()
+  @ApiParam({ name: 'id', type: Number })
+  async updateIcon(
+    @CurrentAuth() user: User,
+    @EntityByIdParam(Company) company: Company,
+    @UploadedFile() icon: Express.Multer.File,
+  ): Promise<IHttpResponse<Company>> {
+    const data = await this.companiesService.updateIcon(user, company.id, icon);
     return { data };
   }
 

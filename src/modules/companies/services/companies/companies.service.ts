@@ -1,14 +1,14 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException, StreamableFile } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
-import to from 'await-to-js';
-
 import { CompanyCreateDto, CompanyUpdateDto } from '../../dto';
 import { Company } from '../../entities';
 import { User } from '@users/entities';
 import { AuthenticationService } from '@authentication/services';
 import { AuthRole } from '@authentication/constants';
 import { UsersService } from '@users/services';
+import { STORAGE_PATHS } from '@core/constants/storage_paths.constant';
+import * as fs from 'fs';
 
 @Injectable()
 export class CompaniesService {
@@ -73,10 +73,42 @@ export class CompaniesService {
     return company;
   }
 
+  async updateIcon(currentUser: User, id: number, icon: Express.Multer.File): Promise<Company> {
+    const company = await this.findOne({ where: { id } });
+    if (!company) throw new NotFoundException('Company not found');
+    await this.validateOwner(currentUser, id);
+    if (company.icon) {
+      const path = `${STORAGE_PATHS.COMPANY_ICONS}/${company.icon}`;
+      if (fs.existsSync(path)) fs.unlinkSync(path);
+    }
+    company.icon = icon.filename;
+    return await this.companiesRepository.save(company);
+  }
+
+  async getIcon(currentUser: User, id: number): Promise<StreamableFile> {
+    const company = await this.companiesRepository.findOneBy({ id });
+    if (!company) throw new NotFoundException('Company not found');
+    await this.validateOwner(currentUser, id);
+    if(company.icon) {
+      const path = `${STORAGE_PATHS.COMPANY_ICONS}/${company.icon}`;
+      if(fs.existsSync(path)) {
+        const file = fs.createReadStream(path);
+        return new StreamableFile(file, {
+          type: 'image/jpg'
+        });
+      }
+    }
+    throw new ForbiddenException('Icon must exist');
+  }
+
   async deleteById(currentUser: User, id: number): Promise<Company> {
     const company = await this.companiesRepository.findOneBy({ id });
     if (!company) throw new NotFoundException('Company not found');
     await this.validateOwner(currentUser, id);
+    if (company.icon) {
+      const path = `${STORAGE_PATHS.COMPANY_ICONS}/${company.icon}`;
+      if (fs.existsSync(path)) fs.unlinkSync(path);
+    }
     return await this.companiesRepository.remove(company);
   }
 

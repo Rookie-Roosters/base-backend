@@ -26,6 +26,11 @@ export class User {
   @Column()
   lastName: string;
 
+  @ApiProperty({ description: "User's icon" })
+  @IsString()
+  @Column()
+  icon: string;
+
   @OneToOne(() => Authentication)
   @JoinColumn()
   authentication?: Authentication;

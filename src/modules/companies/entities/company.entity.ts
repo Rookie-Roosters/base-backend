@@ -15,7 +15,7 @@ export class Company {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true, default: null })
   icon?: string;
 
   @ManyToOne(() => User, (user) => user.id)

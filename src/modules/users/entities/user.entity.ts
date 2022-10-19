@@ -28,8 +28,8 @@ export class User {
 
   @ApiProperty({ description: "User's icon" })
   @IsString()
-  @Column()
-  icon: string;
+  @Column({nullable: true, default: null})
+  icon?: string;
 
   @OneToOne(() => Authentication)
   @JoinColumn()

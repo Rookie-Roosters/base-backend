@@ -28,7 +28,6 @@ export class CompaniesService {
       }))
     ) {
       const res = await this.companiesRepository.save({
-        icon: dto.icon,
         name: dto.name,
         rfc: dto.rfc,
         owner: {
